@@ -1,0 +1,15 @@
+﻿  ConvertSketch.cpp
+  DrawMap.cpp
+  DrawText.cpp
+  Ghost.cpp
+  GhostManager.cpp
+  Main.cpp
+D:\Other\Pet_projects\Pac-Man\Pac-Man\Main.cpp(82,23): warning C4244: 'initializing': conversion from '_Rep' to 'unsigned int', possible loss of data
+          with
+          [
+              _Rep=__int64
+          ]
+  MapCollision.cpp
+  Pacman.cpp
+  Generating Code...
+  Pac-Man.vcxproj -> D:\Other\Pet_projects\Pac-Man\x64\Debug\Pac-Man.exe
