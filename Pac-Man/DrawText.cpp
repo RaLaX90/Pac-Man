@@ -4,7 +4,7 @@
 #include "DrawText.h"
 #include "Global.h"
 
-void draw_text(bool i_center, unsigned short i_x, unsigned short i_y, const std::string& i_text, sf::RenderWindow& i_window)
+void draw_text(bool in_center, unsigned short i_x, unsigned short i_y, const std::string& i_text, sf::RenderWindow& i_window)
 {
 	short character_x = i_x;
 	short character_y = i_y;
@@ -21,7 +21,7 @@ void draw_text(bool i_center, unsigned short i_x, unsigned short i_y, const std:
 
 	character_sprite.setTexture(font_texture);
 
-	if (1 == i_center)
+	if (in_center)
 	{
 		//I spent HOURS trying to make this work.
 		//If you know any better way of doing this, please tell me.
@@ -33,7 +33,7 @@ void draw_text(bool i_center, unsigned short i_x, unsigned short i_y, const std:
 	{
 		if ('\n' == *a)
 		{
-			if (1 == i_center)
+			if (in_center)
 			{
 				//I still don't understand what I wrote here.
 				character_x = static_cast<short>(round(0.5f * (CELL_SIZE * MAP_WIDTH - character_width * i_text.substr(1 + a - i_text.begin(), i_text.find_first_of('\n', 1 + a - i_text.begin()) - (1 + a - i_text.begin())).size())));

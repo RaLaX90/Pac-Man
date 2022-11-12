@@ -7,9 +7,10 @@
 #include "MapCollision.h"
 
 Pacman::Pacman() :
-	animation_over(0),
-	dead(0),
-	direction(0),
+	animation_over(false),
+	dead(false),
+	direction(0), 
+	animation_timer(0),
 	energizer_timer(0),
 	position({ 0, 0 })
 {
@@ -22,7 +23,7 @@ bool Pacman::get_animation_over()
 	return animation_over;
 }
 
-bool Pacman::get_dead()
+bool Pacman::is_dead()
 {
 	return dead;
 }
@@ -47,7 +48,7 @@ void Pacman::draw(bool i_victory, sf::RenderWindow& i_window)
 
 	sprite.setPosition(position.x, position.y);
 
-	if (1 == dead || 1 == i_victory)
+	if (dead || i_victory)
 	{
 		if (animation_timer < PACMAN_DEATH_FRAMES * PACMAN_ANIMATION_SPEED)
 		{
@@ -99,7 +100,7 @@ void Pacman::set_dead(bool i_dead)
 {
 	dead = i_dead;
 
-	if (1 == dead)
+	if (dead)
 	{
 		//Making sure that the animation starts from the beginning.
 		animation_timer = 0;
@@ -114,44 +115,44 @@ void Pacman::set_position(short i_x, short i_y)
 void Pacman::update(unsigned char i_level, std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& i_map)
 {
 	std::array<bool, 4> walls{};
-	walls[0] = map_collision(0, 0, PACMAN_SPEED + position.x, position.y, i_map);
-	walls[1] = map_collision(0, 0, position.x, position.y - PACMAN_SPEED, i_map);
-	walls[2] = map_collision(0, 0, position.x - PACMAN_SPEED, position.y, i_map);
-	walls[3] = map_collision(0, 0, position.x, PACMAN_SPEED + position.y, i_map);
+	walls[0] = is_map_collision(false, false, PACMAN_SPEED + position.x, position.y, i_map);
+	walls[1] = is_map_collision(false, false, position.x, position.y - PACMAN_SPEED, i_map);
+	walls[2] = is_map_collision(false, false, position.x - PACMAN_SPEED, position.y, i_map);
+	walls[3] = is_map_collision(false, false, position.x, PACMAN_SPEED + position.y, i_map);
 
-	if (1 == sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 	{
-		if (0 == walls[0]) //You can't turn in this direction if there's a wall there.
+		if (!walls[0]) //You can't turn in this direction if there's a wall there.
 		{
 			direction = 0;
 		}
 	}
 
-	if (1 == sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 	{
-		if (0 == walls[1])
+		if (!walls[1])
 		{
 			direction = 1;
 		}
 	}
 
-	if (1 == sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 	{
-		if (0 == walls[2])
+		if (!walls[2])
 		{
 			direction = 2;
 		}
 	}
 
-	if (1 == sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 	{
-		if (0 == walls[3])
+		if (!walls[3])
 		{
 			direction = 3;
 		}
 	}
 
-	if (0 == walls[direction])
+	if (!walls[direction])
 	{
 		switch (direction)
 		{
@@ -189,7 +190,7 @@ void Pacman::update(unsigned char i_level, std::array<std::array<Cell, MAP_HEIGH
 		position.x = PACMAN_SPEED - CELL_SIZE;
 	}
 
-	if (1 == map_collision(1, 0, position.x, position.y, i_map)) //When Pacman eats an energizer...
+	if (is_map_collision(true, false, position.x, position.y, i_map)) //When Pacman eats an energizer...
 	{
 		//He becomes energized!
 		energizer_timer = static_cast<unsigned short>(ENERGIZER_DURATION / pow(2, i_level));

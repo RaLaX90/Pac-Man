@@ -219,10 +219,10 @@ void Ghost::update(unsigned char i_level, std::array<std::array<Cell, MAP_HEIGHT
 	update_target(i_pacman.get_direction(), i_ghost_0.get_position(), i_pacman.get_position());
 
 	//This is so clean! I could spend hours staring at it.
-	walls[0] = map_collision(0, use_door, speed + position.x, position.y, i_map);
-	walls[1] = map_collision(0, use_door, position.x, position.y - speed, i_map);
-	walls[2] = map_collision(0, use_door, position.x - speed, position.y, i_map);
-	walls[3] = map_collision(0, use_door, position.x, speed + position.y, i_map);
+	walls[0] = is_map_collision(0, use_door, speed + position.x, position.y, i_map);
+	walls[1] = is_map_collision(0, use_door, position.x, position.y - speed, i_map);
+	walls[2] = is_map_collision(0, use_door, position.x - speed, position.y, i_map);
+	walls[3] = is_map_collision(0, use_door, position.x, speed + position.y, i_map);
 
 	if (1 != frightened_mode)
 	{

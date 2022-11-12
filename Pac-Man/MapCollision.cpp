@@ -4,7 +4,7 @@
 #include "Global.h"
 #include "MapCollision.h"
 
-bool map_collision(bool i_collect_pellets, bool i_use_door, short i_x, short i_y, std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& i_map)
+bool is_map_collision(bool is_collecting_pellets, bool is_using_door, short i_x, short i_y, std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& i_map)
 {
 	bool output = 0;
 
@@ -51,13 +51,13 @@ bool map_collision(bool i_collect_pellets, bool i_use_door, short i_x, short i_y
 		//Making sure that the position is inside the map.
 		if (0 <= x && 0 <= y && MAP_HEIGHT > y && MAP_WIDTH > x)
 		{
-			if (0 == i_collect_pellets) //Here we only care about the walls.
+			if (!is_collecting_pellets) //Here we only care about the walls.
 			{
 				if (Cell::Wall == i_map[x][y])
 				{
 					output = 1;
 				}
-				else if (0 == i_use_door && Cell::Door == i_map[x][y])
+				else if (!is_using_door && Cell::Door == i_map[x][y])
 				{
 					output = 1;
 				}

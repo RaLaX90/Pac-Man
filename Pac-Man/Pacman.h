@@ -19,7 +19,7 @@ public:
 	Pacman();
 
 	bool get_animation_over();
-	bool get_dead();
+	bool is_dead();
 
 	unsigned char get_direction();
 

@@ -76,7 +76,7 @@ int main()
 	//Get the current time and store it in a variable.
 	previous_time = std::chrono::steady_clock::now();
 
-	while (1 == window.isOpen())
+	while (window.isOpen())
 	{
 		//Here we're calculating the lag.
 		unsigned delta_time = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - previous_time).count();
@@ -91,7 +91,7 @@ int main()
 			//We decrease the lag.
 			lag -= FRAME_DURATION;
 
-			while (1 == window.pollEvent(event))
+			while (window.pollEvent(event))
 			{
 				switch (event.type)
 				{
@@ -103,7 +103,12 @@ int main()
 				}
 			}
 
-			if (0 == game_won && 0 == pacman.get_dead())
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+				//Making sure the player can close the window.
+				window.close();
+			}
+
+			if (!game_won && !pacman.is_dead())
 			{
 				game_won = 1;
 
@@ -124,22 +129,22 @@ int main()
 						}
 					}
 
-					if (0 == game_won)
+					if (!game_won)
 					{
 						break;
 					}
 				}
 
-				if (1 == game_won)
+				if (game_won)
 				{
 					pacman.set_animation_timer(0);
 				}
 			}
-			else if (1 == sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) //Restarting the game.
+			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) //Restarting the game.
 			{
 				game_won = 0;
 
-				if (1 == pacman.get_dead())
+				if (pacman.is_dead())
 				{
 					level = 0;
 				}
@@ -161,7 +166,7 @@ int main()
 			{
 				window.clear();
 
-				if (0 == game_won && 0 == pacman.get_dead())
+				if (!game_won && !pacman.is_dead())
 				{
 					draw_map(map, window);
 
@@ -172,9 +177,9 @@ int main()
 
 				pacman.draw(game_won, window);
 
-				if (1 == pacman.get_animation_over())
+				if (pacman.get_animation_over())
 				{
-					if (1 == game_won)
+					if (game_won)
 					{
 						draw_text(1, 0, 0, "Next level!", window);
 					}

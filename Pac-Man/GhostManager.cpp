@@ -44,9 +44,9 @@ void GhostManager::reset(unsigned char i_level, const std::array<Position, 4>& i
 
 void GhostManager::update(unsigned char i_level, std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& i_map, Pacman& i_pacman)
 {
-	if (0 == i_pacman.get_energizer_timer()) //We won't update the wave timer when Pacman is energized.
+	if (!i_pacman.get_energizer_timer()) //We won't update the wave timer when Pacman is energized.
 	{
-		if (0 == wave_timer)
+		if (!wave_timer)
 		{
 			if (7 > current_wave)
 			{
@@ -59,11 +59,11 @@ void GhostManager::update(unsigned char i_level, std::array<std::array<Cell, MAP
 			}
 
 			//I took the rules from the website.
-			if (1 == current_wave % 2)
+			if (current_wave % 2)
 			{
 				wave_timer = CHASE_DURATION;
 			}
-			else if (2 == current_wave)
+			else if (current_wave)
 			{
 				wave_timer = static_cast<unsigned short>(LONG_SCATTER_DURATION / pow(2, i_level));
 			}
