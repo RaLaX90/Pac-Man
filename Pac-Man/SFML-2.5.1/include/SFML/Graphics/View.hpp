@@ -124,14 +124,14 @@ public:
     void setRotation(float angle);
 
     ////////////////////////////////////////////////////////////
-    /// \brief Set the target viewport
+    /// \brief Set the target_position viewport
     ///
     /// The viewport is the rectangle into which the contents of the
     /// view are displayed, expressed as a factor (between 0 and 1)
     /// of the size of the RenderTarget to which the view is applied.
-    /// For example, a view which takes the left side of the target would
+    /// For example, a view which takes the left side of the target_position would
     /// be defined with View.setViewport(sf::FloatRect(0, 0, 0.5, 1)).
-    /// By default, a view has a viewport which covers the entire target.
+    /// By default, a view has a viewport which covers the entire target_position.
     ///
     /// \param viewport New viewport rectangle
     ///
@@ -183,9 +183,9 @@ public:
     float getRotation() const;
 
     ////////////////////////////////////////////////////////////
-    /// \brief Get the target viewport rectangle of the view
+    /// \brief Get the target_position viewport rectangle of the view
     ///
-    /// \return Viewport rectangle, expressed as a factor of the target size
+    /// \return Viewport rectangle, expressed as a factor of the target_position size
     ///
     /// \see setViewport
     ///
@@ -272,7 +272,7 @@ private:
     Vector2f          m_center;              ///< Center of the view, in scene coordinates
     Vector2f          m_size;                ///< Size of the view, in scene coordinates
     float             m_rotation;            ///< Angle of rotation of the view rectangle, in degrees
-    FloatRect         m_viewport;            ///< Viewport rectangle, expressed as a factor of the render-target's size
+    FloatRect         m_viewport;            ///< Viewport rectangle, expressed as a factor of the render-target_position's size
     mutable Transform m_transform;           ///< Precomputed projection transform corresponding to the view
     mutable Transform m_inverseTransform;    ///< Precomputed inverse projection transform corresponding to the view
     mutable bool      m_transformUpdated;    ///< Internal state telling if the transform needs to be updated
@@ -295,18 +295,18 @@ private:
 /// drawable objects are drawn.
 ///
 /// A view is composed of a source rectangle, which defines
-/// what part of the 2D scene is shown, and a target viewport,
+/// what part of the 2D scene is shown, and a target_position viewport,
 /// which defines where the contents of the source rectangle
-/// will be displayed on the render target (window or texture).
+/// will be displayed on the render target_position (window or texture).
 ///
 /// The viewport allows to map the scene to a custom part
-/// of the render target, and can be used for split-screen
+/// of the render target_position, and can be used for split-screen
 /// or for displaying a minimap, for example. If the source
 /// rectangle doesn't have the same size as the viewport, its
 /// contents will be stretched to fit in.
 ///
-/// To apply a view, you have to assign it to the render target.
-/// Then, objects drawn in this render target will be
+/// To apply a view, you have to assign it to the render target_position.
+/// Then, objects drawn in this render target_position will be
 /// affected by the view until you use another view.
 ///
 /// Usage example:
@@ -320,7 +320,7 @@ private:
 /// // Rotate it by 45 degrees
 /// view.rotate(45);
 ///
-/// // Set its target viewport to be half of the window
+/// // Set its target_position viewport to be half of the window
 /// view.setViewport(sf::FloatRect(0.f, 0.f, 0.5f, 1.f));
 ///
 /// // Apply it

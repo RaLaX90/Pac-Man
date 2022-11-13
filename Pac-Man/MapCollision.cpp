@@ -4,13 +4,13 @@
 #include "Global.h"
 #include "MapCollision.h"
 
-bool is_map_collision(bool is_collecting_pellets, bool is_using_door, short i_x, short i_y, std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& i_map)
+bool is_map_collision(bool is_collecting_pellets, bool is_using_door, short x, short y, std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& map)
 {
 	bool output = 0;
 
 	//Getting the exact position.
-	float cell_x = i_x / static_cast<float>(CELL_SIZE);
-	float cell_y = i_y / static_cast<float>(CELL_SIZE);
+	float cell_x = x / static_cast<float>(CELL_SIZE);
+	float cell_y = y / static_cast<float>(CELL_SIZE);
 
 	//A ghost/Pacman can intersect 4 cells at most.
 	for (unsigned char a = 0; a < 4; a++)
@@ -53,26 +53,26 @@ bool is_map_collision(bool is_collecting_pellets, bool is_using_door, short i_x,
 		{
 			if (!is_collecting_pellets) //Here we only care about the walls.
 			{
-				if (Cell::Wall == i_map[x][y])
+				if (Cell::Wall == map[x][y])
 				{
 					output = 1;
 				}
-				else if (!is_using_door && Cell::Door == i_map[x][y])
+				else if (!is_using_door && Cell::Door == map[x][y])
 				{
 					output = 1;
 				}
 			}
 			else //Here we only care about the collectables.
 			{
-				if (Cell::Energizer == i_map[x][y])
+				if (Cell::Energizer == map[x][y])
 				{
 					output = 1;
 
-					i_map[x][y] = Cell::Empty;
+					map[x][y] = Cell::Empty;
 				}
-				else if (Cell::Pellet == i_map[x][y])
+				else if (Cell::Pellet == map[x][y])
 				{
-					i_map[x][y] = Cell::Empty;
+					map[x][y] = Cell::Empty;
 				}
 			}
 		}

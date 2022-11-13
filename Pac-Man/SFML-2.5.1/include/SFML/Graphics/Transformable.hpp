@@ -377,10 +377,10 @@ private:
 /// \code
 /// class MyEntity : public sf::Transformable, public sf::Drawable
 /// {
-///     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
+///     virtual void draw(sf::RenderTarget& target_position, sf::RenderStates states) const
 ///     {
 ///         states.transform *= getTransform();
-///         target.draw(..., states);
+///         target_position.draw(..., states);
 ///     }
 /// };
 ///
@@ -402,9 +402,9 @@ private:
 ///         myTransform.setPosition(v.x(), v.y());
 ///     }
 ///
-///     void Draw(sf::RenderTarget& target) const
+///     void Draw(sf::RenderTarget& target_position) const
 ///     {
-///         target.draw(..., myTransform.getTransform());
+///         target_position.draw(..., myTransform.getTransform());
 ///     }
 ///
 /// private:

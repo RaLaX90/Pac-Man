@@ -172,7 +172,7 @@ int main()
 
 					ghost_manager.draw(GHOST_FLASH_START >= pacman.get_energizer_timer(), window);
 
-					draw_text(0, 0, CELL_SIZE * MAP_HEIGHT, "Level: " + std::to_string(1 + level), window);
+					draw_text(false, 0, CELL_SIZE * MAP_HEIGHT, "Level: " + std::to_string(1 + level), window);
 				}
 
 				pacman.draw(game_won, window);
@@ -181,11 +181,11 @@ int main()
 				{
 					if (game_won)
 					{
-						draw_text(1, 0, 0, "Next level!", window);
+						draw_text(true, 0, 0, "Next level!", window);
 					}
 					else
 					{
-						draw_text(1, 0, 0, "Game over", window);
+						draw_text(true, 0, 0, "Game over", window);
 					}
 				}
 

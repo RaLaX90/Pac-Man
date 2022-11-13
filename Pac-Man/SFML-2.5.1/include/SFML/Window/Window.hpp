@@ -52,7 +52,7 @@ namespace priv
 class Event;
 
 ////////////////////////////////////////////////////////////
-/// \brief Window that serves as a target for OpenGL rendering
+/// \brief Window that serves as a target_position for OpenGL rendering
 ///
 ////////////////////////////////////////////////////////////
 class SFML_WINDOW_API Window : GlResource, NonCopyable
@@ -426,7 +426,7 @@ public:
     void setJoystickThreshold(float threshold);
 
     ////////////////////////////////////////////////////////////
-    /// \brief Activate or deactivate the window as the current target
+    /// \brief Activate or deactivate the window as the current target_position
     ///        for OpenGL rendering
     ///
     /// A window is active only on the current thread, if you want to

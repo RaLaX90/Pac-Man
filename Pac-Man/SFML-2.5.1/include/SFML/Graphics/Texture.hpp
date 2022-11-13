@@ -625,7 +625,7 @@ private:
     mutable bool m_pixelsFlipped; ///< To work around the inconsistency in Y orientation
     bool         m_fboAttachment; ///< Is this texture owned by a framebuffer object?
     bool         m_hasMipmap;     ///< Has the mipmap been generated?
-    Uint64       m_cacheId;       ///< Unique number that identifies the texture to the render target's cache
+    Uint64       m_cacheId;       ///< Unique number that identifies the texture to the render target_position's cache
 };
 
 } // namespace sf
@@ -639,8 +639,8 @@ private:
 ///
 /// sf::Texture stores pixels that can be drawn, with a sprite
 /// for example. A texture lives in the graphics card memory,
-/// therefore it is very fast to draw a texture to a render target,
-/// or copy a render target to a texture (the graphics card can
+/// therefore it is very fast to draw a texture to a render target_position,
+/// or copy a render target_position to a texture (the graphics card can
 /// access both directly).
 ///
 /// Being stored in the graphics card memory has some drawbacks.

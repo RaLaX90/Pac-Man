@@ -4,10 +4,10 @@
 #include "DrawText.h"
 #include "Global.h"
 
-void draw_text(bool in_center, unsigned short i_x, unsigned short i_y, const std::string& i_text, sf::RenderWindow& i_window)
+void draw_text(bool in_center, unsigned short x, unsigned short y, const std::string& drawing_text, sf::RenderWindow& window)
 {
-	short character_x = i_x;
-	short character_y = i_y;
+	short character_x = x;
+	short character_y = y;
 
 	unsigned char character_width;
 
@@ -25,22 +25,22 @@ void draw_text(bool in_center, unsigned short i_x, unsigned short i_y, const std
 	{
 		//I spent HOURS trying to make this work.
 		//If you know any better way of doing this, please tell me.
-		character_x = static_cast<short>(round(0.5f * (CELL_SIZE * MAP_WIDTH - character_width * i_text.substr(0, i_text.find_first_of('\n')).size())));
-		character_y = static_cast<short>(round(0.5f * (CELL_SIZE * MAP_HEIGHT - FONT_HEIGHT * (1 + std::count(i_text.begin(), i_text.end(), '\n')))));
+		character_x = static_cast<short>(round(0.5f * (CELL_SIZE * MAP_WIDTH - character_width * drawing_text.substr(0, drawing_text.find_first_of('\n')).size())));
+		character_y = static_cast<short>(round(0.5f * (CELL_SIZE * MAP_HEIGHT - FONT_HEIGHT * (1 + std::count(drawing_text.begin(), drawing_text.end(), '\n')))));
 	}
 
-	for (std::string::const_iterator a = i_text.begin(); a != i_text.end(); a++)
+	for (std::string::const_iterator a = drawing_text.begin(); a != drawing_text.end(); a++)
 	{
 		if ('\n' == *a)
 		{
 			if (in_center)
 			{
 				//I still don't understand what I wrote here.
-				character_x = static_cast<short>(round(0.5f * (CELL_SIZE * MAP_WIDTH - character_width * i_text.substr(1 + a - i_text.begin(), i_text.find_first_of('\n', 1 + a - i_text.begin()) - (1 + a - i_text.begin())).size())));
+				character_x = static_cast<short>(round(0.5f * (CELL_SIZE * MAP_WIDTH - character_width * drawing_text.substr(1 + a - drawing_text.begin(), drawing_text.find_first_of('\n', 1 + a - drawing_text.begin()) - (1 + a - drawing_text.begin())).size())));
 			}
 			else
 			{
-				character_x = i_x;
+				character_x = x;
 			}
 
 			character_y += FONT_HEIGHT;
@@ -54,6 +54,6 @@ void draw_text(bool in_center, unsigned short i_x, unsigned short i_y, const std
 
 		character_x += character_width;
 
-		i_window.draw(character_sprite);
+		window.draw(character_sprite);
 	}
 }

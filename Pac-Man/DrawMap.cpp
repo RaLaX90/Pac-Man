@@ -4,7 +4,7 @@
 #include "Global.h"
 #include "DrawMap.h"
 
-void draw_map(const std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& i_map, sf::RenderWindow& i_window)
+void draw_map(const std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& map, sf::RenderWindow& window)
 {
 	sf::Sprite sprite;
 
@@ -20,13 +20,13 @@ void draw_map(const std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& i_map, 
 			sprite.setPosition(static_cast<float>(CELL_SIZE * a), static_cast<float>(CELL_SIZE * b));
 
 			//We just crop out what we need from the texture.
-			switch (i_map[a][b])
+			switch (map[a][b])
 			{
 			case Cell::Door:
 			{
 				sprite.setTextureRect(sf::IntRect(2 * CELL_SIZE, CELL_SIZE, CELL_SIZE, CELL_SIZE));
 
-				i_window.draw(sprite);
+				window.draw(sprite);
 
 				break;
 			}
@@ -34,7 +34,7 @@ void draw_map(const std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& i_map, 
 			{
 				sprite.setTextureRect(sf::IntRect(CELL_SIZE, CELL_SIZE, CELL_SIZE, CELL_SIZE));
 
-				i_window.draw(sprite);
+				window.draw(sprite);
 
 				break;
 			}
@@ -42,7 +42,7 @@ void draw_map(const std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& i_map, 
 			{
 				sprite.setTextureRect(sf::IntRect(0, CELL_SIZE, CELL_SIZE, CELL_SIZE));
 
-				i_window.draw(sprite);
+				window.draw(sprite);
 
 				break;
 			}
@@ -55,7 +55,7 @@ void draw_map(const std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& i_map, 
 
 				if (b < MAP_HEIGHT - 1)
 				{
-					if (Cell::Wall == i_map[a][1 + b])
+					if (Cell::Wall == map[a][1 + b])
 					{
 						down = 1;
 					}
@@ -64,7 +64,7 @@ void draw_map(const std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& i_map, 
 				//Since we have warp tunnels, we need to draw them as if they're connected.
 				if (0 < a)
 				{
-					if (Cell::Wall == i_map[a - 1][b])
+					if (Cell::Wall == map[a - 1][b])
 					{
 						left = 1;
 					}
@@ -76,7 +76,7 @@ void draw_map(const std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& i_map, 
 
 				if (a < MAP_WIDTH - 1)
 				{
-					if (Cell::Wall == i_map[1 + a][b])
+					if (Cell::Wall == map[1 + a][b])
 					{
 						right = 1;
 					}
@@ -88,7 +88,7 @@ void draw_map(const std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& i_map, 
 
 				if (0 < b)
 				{
-					if (Cell::Wall == i_map[a][b - 1])
+					if (Cell::Wall == map[a][b - 1])
 					{
 						up = 1;
 					}
@@ -97,7 +97,7 @@ void draw_map(const std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& i_map, 
 				//--------------------------------------------<         DISTRIBUTIVE PROPERTY!         >----------------------------
 				sprite.setTextureRect(sf::IntRect(CELL_SIZE * (down + 2 * (left + 2 * (right + 2 * up))), 0, CELL_SIZE, CELL_SIZE));
 
-				i_window.draw(sprite);
+				window.draw(sprite);
 			}
 			}
 		}

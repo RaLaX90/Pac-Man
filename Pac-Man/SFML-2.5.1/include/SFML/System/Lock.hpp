@@ -45,7 +45,7 @@ class SFML_SYSTEM_API Lock : NonCopyable
 public:
 
     ////////////////////////////////////////////////////////////
-    /// \brief Construct the lock with a target mutex
+    /// \brief Construct the lock with a target_position mutex
     ///
     /// The mutex passed to sf::Lock is automatically locked.
     ///

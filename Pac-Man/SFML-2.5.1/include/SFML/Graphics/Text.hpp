@@ -42,7 +42,7 @@
 namespace sf
 {
 ////////////////////////////////////////////////////////////
-/// \brief Graphical text that can be drawn to a render target
+/// \brief Graphical text that can be drawn to a render target_position
 ///
 ////////////////////////////////////////////////////////////
 class SFML_GRAPHICS_API Text : public Drawable, public Transformable
@@ -415,13 +415,13 @@ public:
 private:
 
     ////////////////////////////////////////////////////////////
-    /// \brief Draw the text to a render target
+    /// \brief Draw the text to a render target_position
     ///
-    /// \param target Render target to draw to
+    /// \param target_position Render target_position to draw to
     /// \param states Current render states
     ///
     ////////////////////////////////////////////////////////////
-    virtual void draw(RenderTarget& target, RenderStates states) const;
+    virtual void draw(RenderTarget& target_position, RenderStates states) const;
 
     ////////////////////////////////////////////////////////////
     /// \brief Make sure the text's geometry is updated
@@ -462,7 +462,7 @@ private:
 /// \ingroup graphics
 ///
 /// sf::Text is a drawable class that allows to easily display
-/// some text with custom style and color on a render target.
+/// some text with custom style and color on a render target_position.
 ///
 /// It inherits all the functions from sf::Transformable:
 /// position, rotation, scale, origin. It also adds text-specific
@@ -482,7 +482,7 @@ private:
 /// and any operation on it is slow (often too slow for real-time
 /// applications). On the other side, a sf::Text is a lightweight
 /// object which can combine the glyphs data and metrics of a sf::Font
-/// to display any text on a render target.
+/// to display any text on a render target_position.
 ///
 /// It is important to note that the sf::Text instance doesn't
 /// copy the font that it uses, it only keeps a reference to it.

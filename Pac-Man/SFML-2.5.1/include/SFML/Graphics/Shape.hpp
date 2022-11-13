@@ -268,13 +268,13 @@ protected:
 private:
 
     ////////////////////////////////////////////////////////////
-    /// \brief Draw the shape to a render target
+    /// \brief Draw the shape to a render target_position
     ///
-    /// \param target Render target to draw to
+    /// \param target_position Render target_position to draw to
     /// \param states Current render states
     ///
     ////////////////////////////////////////////////////////////
-    virtual void draw(RenderTarget& target, RenderStates states) const;
+    virtual void draw(RenderTarget& target_position, RenderStates states) const;
 
     ////////////////////////////////////////////////////////////
     /// \brief Update the fill vertices' color
@@ -327,7 +327,7 @@ private:
 /// \ingroup graphics
 ///
 /// sf::Shape is a drawable class that allows to define and
-/// display a custom convex shape on a render target.
+/// display a custom convex shape on a render target_position.
 /// It's only an abstract base, it needs to be specialized for
 /// concrete types of shapes (circle, rectangle, convex polygon,
 /// star, ...).

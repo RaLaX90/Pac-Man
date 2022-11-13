@@ -38,7 +38,7 @@ class RenderTarget;
 
 ////////////////////////////////////////////////////////////
 /// \brief Abstract base class for objects that can be drawn
-///        to a render target
+///        to a render target_position
 ///
 ////////////////////////////////////////////////////////////
 class SFML_GRAPHICS_API Drawable
@@ -56,17 +56,17 @@ protected:
     friend class RenderTarget;
 
     ////////////////////////////////////////////////////////////
-    /// \brief Draw the object to a render target
+    /// \brief Draw the object to a render target_position
     ///
     /// This is a pure virtual function that has to be implemented
     /// by the derived class to define how the drawable should be
     /// drawn.
     ///
-    /// \param target Render target to draw to
+    /// \param target_position Render target_position to draw to
     /// \param states Current render states
     ///
     ////////////////////////////////////////////////////////////
-    virtual void draw(RenderTarget& target, RenderStates states) const = 0;
+    virtual void draw(RenderTarget& target_position, RenderStates states) const = 0;
 };
 
 } // namespace sf
@@ -100,14 +100,14 @@ protected:
 ///
 /// private:
 ///
-///     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
+///     virtual void draw(sf::RenderTarget& target_position, sf::RenderStates states) const
 ///     {
 ///         // You can draw other high-level objects
-///         target.draw(m_sprite, states);
+///         target_position.draw(m_sprite, states);
 ///
 ///         // ... or use the low-level API
 ///         states.texture = &m_texture;
-///         target.draw(m_vertices, states);
+///         target_position.draw(m_vertices, states);
 ///
 ///         // ... or draw with OpenGL directly
 ///         glBegin(GL_QUADS);

@@ -38,7 +38,7 @@
 namespace sf
 {
 ////////////////////////////////////////////////////////////
-/// \brief Window that can serve as a target for 2D drawing
+/// \brief Window that can serve as a target_position for 2D drawing
 ///
 ////////////////////////////////////////////////////////////
 class SFML_GRAPHICS_API RenderWindow : public Window, public RenderTarget
@@ -113,7 +113,7 @@ public:
     virtual Vector2u getSize() const;
 
     ////////////////////////////////////////////////////////////
-    /// \brief Activate or deactivate the window as the current target
+    /// \brief Activate or deactivate the window as the current target_position
     ///        for OpenGL rendering
     ///
     /// A window is active only on the current thread, if you want to

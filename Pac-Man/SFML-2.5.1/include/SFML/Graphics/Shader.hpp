@@ -848,16 +848,16 @@ private:
 /// current one may not give you the expected result.
 ///
 /// Shaders can also be used to apply global post-effects to the
-/// current contents of the target (like the old sf::PostFx class
+/// current contents of the target_position (like the old sf::PostFx class
 /// in SFML 1). This can be done in two different ways:
 /// \li draw everything to a sf::RenderTexture, then draw it to
-///     the main target using the shader
-/// \li draw everything directly to the main target, then use
+///     the main target_position using the shader
+/// \li draw everything directly to the main target_position, then use
 ///     sf::Texture::update(Window&) to copy its contents to a texture
-///     and draw it to the main target using the shader
+///     and draw it to the main target_position using the shader
 ///
 /// The first technique is more optimized because it doesn't involve
-/// retrieving the target's pixels to system memory, but the
+/// retrieving the target_position's pixels to system memory, but the
 /// second one doesn't impact the rendering process and can be
 /// easily inserted anywhere without impacting all the code.
 ///

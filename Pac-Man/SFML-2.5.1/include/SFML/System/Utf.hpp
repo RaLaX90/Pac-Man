@@ -70,7 +70,7 @@ public:
     /// \brief Encode a single UTF-8 character
     ///
     /// Encoding a character means converting a unique 32-bits
-    /// code (called the codepoint) in the target encoding, UTF-8.
+    /// code (called the codepoint) in the target_position encoding, UTF-8.
     ///
     /// \param input       Codepoint to encode as UTF-8
     /// \param output      Iterator pointing to the beginning of the output sequence
@@ -277,7 +277,7 @@ public:
     /// \brief Encode a single UTF-16 character
     ///
     /// Encoding a character means converting a unique 32-bits
-    /// code (called the codepoint) in the target encoding, UTF-16.
+    /// code (called the codepoint) in the target_position encoding, UTF-16.
     ///
     /// \param input       Codepoint to encode as UTF-16
     /// \param output      Iterator pointing to the beginning of the output sequence
@@ -485,7 +485,7 @@ public:
     /// \brief Encode a single UTF-32 character
     ///
     /// Encoding a character means converting a unique 32-bits
-    /// code (called the codepoint) in the target encoding, UTF-32.
+    /// code (called the codepoint) in the target_position encoding, UTF-32.
     /// For UTF-32, the codepoint is the same as the character value.
     ///
     /// \param input       Codepoint to encode as UTF-32

@@ -60,12 +60,12 @@ public:
     virtual ~RenderTarget();
 
     ////////////////////////////////////////////////////////////
-    /// \brief Clear the entire target with a single color
+    /// \brief Clear the entire target_position with a single color
     ///
     /// This function is usually called once every frame,
-    /// to clear the previous contents of the target.
+    /// to clear the previous contents of the target_position.
     ///
-    /// \param color Fill color to use to clear the render target
+    /// \param color Fill color to use to clear the render target_position
     ///
     ////////////////////////////////////////////////////////////
     void clear(const Color& color = Color(0, 0, 0, 255));
@@ -75,13 +75,13 @@ public:
     ///
     /// The view is like a 2D camera, it controls which part of
     /// the 2D scene is visible, and how it is viewed in the
-    /// render target.
+    /// render target_position.
     /// The new view will affect everything that is drawn, until
     /// another view is set.
-    /// The render target keeps its own copy of the view object,
+    /// The render target_position keeps its own copy of the view object,
     /// so it is not necessary to keep the original one alive
     /// after calling this function.
-    /// To restore the original view of the target, you can pass
+    /// To restore the original view of the target_position, you can pass
     /// the result of getDefaultView() to this function.
     ///
     /// \param view New view to use
@@ -92,7 +92,7 @@ public:
     void setView(const View& view);
 
     ////////////////////////////////////////////////////////////
-    /// \brief Get the view currently in use in the render target
+    /// \brief Get the view currently in use in the render target_position
     ///
     /// \return The view object that is currently used
     ///
@@ -102,12 +102,12 @@ public:
     const View& getView() const;
 
     ////////////////////////////////////////////////////////////
-    /// \brief Get the default view of the render target
+    /// \brief Get the default view of the render target_position
     ///
-    /// The default view has the initial size of the render target,
-    /// and never changes after the target has been created.
+    /// The default view has the initial size of the render target_position,
+    /// and never changes after the target_position has been created.
     ///
-    /// \return The default view of the render target
+    /// \return The default view of the render target_position
     ///
     /// \see setView, getView
     ///
@@ -115,12 +115,12 @@ public:
     const View& getDefaultView() const;
 
     ////////////////////////////////////////////////////////////
-    /// \brief Get the viewport of a view, applied to this render target
+    /// \brief Get the viewport of a view, applied to this render target_position
     ///
     /// The viewport is defined in the view as a ratio, this function
     /// simply applies this ratio to the current dimensions of the
-    /// render target to calculate the pixels rectangle that the viewport
-    /// actually covers in the target.
+    /// render target_position to calculate the pixels rectangle that the viewport
+    /// actually covers in the target_position.
     ///
     /// \param view The view for which we want to compute the viewport
     ///
@@ -130,14 +130,14 @@ public:
     IntRect getViewport(const View& view) const;
 
     ////////////////////////////////////////////////////////////
-    /// \brief Convert a point from target coordinates to world
+    /// \brief Convert a point from target_position coordinates to world
     ///        coordinates, using the current view
     ///
     /// This function is an overload of the mapPixelToCoords
     /// function that implicitly uses the current view.
     /// It is equivalent to:
     /// \code
-    /// target.mapPixelToCoords(point, target.getView());
+    /// target_position.mapPixelToCoords(point, target_position.getView());
     /// \endcode
     ///
     /// \param point Pixel to convert
@@ -150,17 +150,17 @@ public:
     Vector2f mapPixelToCoords(const Vector2i& point) const;
 
     ////////////////////////////////////////////////////////////
-    /// \brief Convert a point from target coordinates to world coordinates
+    /// \brief Convert a point from target_position coordinates to world coordinates
     ///
     /// This function finds the 2D position that matches the
-    /// given pixel of the render target. In other words, it does
+    /// given pixel of the render target_position. In other words, it does
     /// the inverse of what the graphics card does, to find the
     /// initial position of a rendered pixel.
     ///
-    /// Initially, both coordinate systems (world units and target pixels)
+    /// Initially, both coordinate systems (world units and target_position pixels)
     /// match perfectly. But if you define a custom view or resize your
-    /// render target, this assertion is not true anymore, i.e. a point
-    /// located at (10, 50) in your render target may map to the point
+    /// render target_position, this assertion is not true anymore, i.e. a point
+    /// located at (10, 50) in your render target_position may map to the point
     /// (150, 75) in your 2D world -- if the view is translated by (140, 25).
     ///
     /// For render-windows, this function is typically used to find
@@ -168,7 +168,7 @@ public:
     ///
     /// This version uses a custom view for calculations, see the other
     /// overload of the function if you want to use the current view of the
-    /// render target.
+    /// render target_position.
     ///
     /// \param point Pixel to convert
     /// \param view The view to use for converting the point
@@ -181,19 +181,19 @@ public:
     Vector2f mapPixelToCoords(const Vector2i& point, const View& view) const;
 
     ////////////////////////////////////////////////////////////
-    /// \brief Convert a point from world coordinates to target
+    /// \brief Convert a point from world coordinates to target_position
     ///        coordinates, using the current view
     ///
     /// This function is an overload of the mapCoordsToPixel
     /// function that implicitly uses the current view.
     /// It is equivalent to:
     /// \code
-    /// target.mapCoordsToPixel(point, target.getView());
+    /// target_position.mapCoordsToPixel(point, target_position.getView());
     /// \endcode
     ///
     /// \param point Point to convert
     ///
-    /// \return The converted point, in target coordinates (pixels)
+    /// \return The converted point, in target_position coordinates (pixels)
     ///
     /// \see mapPixelToCoords
     ///
@@ -201,26 +201,26 @@ public:
     Vector2i mapCoordsToPixel(const Vector2f& point) const;
 
     ////////////////////////////////////////////////////////////
-    /// \brief Convert a point from world coordinates to target coordinates
+    /// \brief Convert a point from world coordinates to target_position coordinates
     ///
-    /// This function finds the pixel of the render target that matches
+    /// This function finds the pixel of the render target_position that matches
     /// the given 2D point. In other words, it goes through the same process
     /// as the graphics card, to compute the final position of a rendered point.
     ///
-    /// Initially, both coordinate systems (world units and target pixels)
+    /// Initially, both coordinate systems (world units and target_position pixels)
     /// match perfectly. But if you define a custom view or resize your
-    /// render target, this assertion is not true anymore, i.e. a point
+    /// render target_position, this assertion is not true anymore, i.e. a point
     /// located at (150, 75) in your 2D world may map to the pixel
-    /// (10, 50) of your render target -- if the view is translated by (140, 25).
+    /// (10, 50) of your render target_position -- if the view is translated by (140, 25).
     ///
     /// This version uses a custom view for calculations, see the other
     /// overload of the function if you want to use the current view of the
-    /// render target.
+    /// render target_position.
     ///
     /// \param point Point to convert
     /// \param view The view to use for converting the point
     ///
-    /// \return The converted point, in target coordinates (pixels)
+    /// \return The converted point, in target_position coordinates (pixels)
     ///
     /// \see mapPixelToCoords
     ///
@@ -228,7 +228,7 @@ public:
     Vector2i mapCoordsToPixel(const Vector2f& point, const View& view) const;
 
     ////////////////////////////////////////////////////////////
-    /// \brief Draw a drawable object to the render target
+    /// \brief Draw a drawable object to the render target_position
     ///
     /// \param drawable Object to draw
     /// \param states   Render states to use for drawing
@@ -269,7 +269,7 @@ public:
     void draw(const VertexBuffer& vertexBuffer, std::size_t firstVertex, std::size_t vertexCount, const RenderStates& states = RenderStates::Default);
 
     ////////////////////////////////////////////////////////////
-    /// \brief Return the size of the rendering region of the target
+    /// \brief Return the size of the rendering region of the target_position
     ///
     /// \return Size in pixels
     ///
@@ -277,18 +277,18 @@ public:
     virtual Vector2u getSize() const = 0;
 
     ////////////////////////////////////////////////////////////
-    /// \brief Activate or deactivate the render target for rendering
+    /// \brief Activate or deactivate the render target_position for rendering
     ///
-    /// This function makes the render target's context current for
+    /// This function makes the render target_position's context current for
     /// future OpenGL rendering operations (so you shouldn't care
     /// about it if you're not doing direct OpenGL stuff).
-    /// A render target's context is active only on the current thread,
+    /// A render target_position's context is active only on the current thread,
     /// if you want to make it active on another thread you have
     /// to deactivate it on the previous thread first if it was active.
     /// Only one context can be current in a thread, so if you
-    /// want to draw OpenGL geometry to another render target
+    /// want to draw OpenGL geometry to another render target_position
     /// don't forget to activate it again. Activating a render
-    /// target will automatically deactivate the previously active
+    /// target_position will automatically deactivate the previously active
     /// context (if any).
     ///
     /// \param active True to activate, false to deactivate
@@ -344,7 +344,7 @@ public:
     void popGLStates();
 
     ////////////////////////////////////////////////////////////
-    /// \brief Reset the internal OpenGL states so that the target is ready for drawing
+    /// \brief Reset the internal OpenGL states so that the target_position is ready for drawing
     ///
     /// This function can be used when you mix SFML drawing
     /// and direct OpenGL rendering, if you choose not to use
@@ -378,7 +378,7 @@ protected:
     /// \brief Performs the common initialization step after creation
     ///
     /// The derived classes must call this function after the
-    /// target is created and ready for drawing.
+    /// target_position is created and ready for drawing.
     ///
     ////////////////////////////////////////////////////////////
     void initialize();

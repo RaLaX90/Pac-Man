@@ -208,7 +208,7 @@ public:
     ///
     /// The current global locale is used for conversion. If you
     /// want to explicitly specify a locale, see toAnsiString.
-    /// Characters that do not fit in the target encoding are
+    /// Characters that do not fit in the target_position encoding are
     /// discarded from the returned string.
     /// This operator is defined for convenience, and is equivalent
     /// to calling toAnsiString().
@@ -223,7 +223,7 @@ public:
     ////////////////////////////////////////////////////////////
     /// \brief Implicit conversion operator to std::wstring (wide string)
     ///
-    /// Characters that do not fit in the target encoding are
+    /// Characters that do not fit in the target_position encoding are
     /// discarded from the returned string.
     /// This operator is defined for convenience, and is equivalent
     /// to calling toWideString().
@@ -240,7 +240,7 @@ public:
     ///
     /// The UTF-32 string is converted to an ANSI string in
     /// the encoding defined by \a locale.
-    /// Characters that do not fit in the target encoding are
+    /// Characters that do not fit in the target_position encoding are
     /// discarded from the returned string.
     ///
     /// \param locale Locale to use for conversion
@@ -255,7 +255,7 @@ public:
     ////////////////////////////////////////////////////////////
     /// \brief Convert the Unicode string to a wide string
     ///
-    /// Characters that do not fit in the target encoding are
+    /// Characters that do not fit in the target_position encoding are
     /// discarded from the returned string.
     ///
     /// \return Converted wide string

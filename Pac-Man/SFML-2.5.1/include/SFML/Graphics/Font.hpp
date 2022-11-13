@@ -389,7 +389,7 @@ private:
 /// is slow (often too slow for real-time applications). On the other
 /// side, a sf::Text is a lightweight object which can combine the
 /// glyphs data and metrics of a sf::Font to display any text on a
-/// render target.
+/// render target_position.
 /// Note that it is also possible to bind several sf::Text instances
 /// to the same sf::Font.
 ///

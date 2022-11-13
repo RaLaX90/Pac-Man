@@ -5,7 +5,7 @@ class Ghost
 	//It can be the scatter mode or the chase mode.
 	bool movement_mode;
 	//"Can I use the door, pwease?"
-	bool use_door;
+	bool is_can_use_door;
 
 	//Current direction.
 	unsigned char direction;
@@ -24,13 +24,13 @@ class Ghost
 	unsigned short animation_timer;
 
 	//The ghost will go here when escaping.
-	Position home;
+	Position home_position;
 	//You can't stay in your house forever (sadly).
-	Position home_exit;
+	Position door_position;
 	//Current position.
 	Position position;
-	//Current target.
-	Position target;
+	//Current target_position.
+	Position target_position;
 public:
 	Ghost(unsigned char i_id);
 

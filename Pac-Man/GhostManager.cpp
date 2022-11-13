@@ -15,24 +15,24 @@ GhostManager::GhostManager() :
 
 }
 
-void GhostManager::draw(bool i_flash, sf::RenderWindow& i_window)
+void GhostManager::draw(bool flash, sf::RenderWindow& window)
 {
 	for (Ghost& ghost : ghosts)
 	{
-		ghost.draw(i_flash, i_window);
+		ghost.draw(flash, window);
 	}
 }
 
-void GhostManager::reset(unsigned char i_level, const std::array<Position, 4>& i_ghost_positions)
+void GhostManager::reset(unsigned char level, const std::array<Position, 4>& ghost_positions)
 {
 	current_wave = 0;
 
 	//This is how we're increasing the difficulty.
-	wave_timer = static_cast<unsigned short>(LONG_SCATTER_DURATION / pow(2, i_level));
+	wave_timer = static_cast<unsigned short>(LONG_SCATTER_DURATION / pow(2, level));
 
 	for (unsigned char a = 0; a < 4; a++)
 	{
-		ghosts[a].set_position(i_ghost_positions[a].x, i_ghost_positions[a].y);
+		ghosts[a].set_position(ghost_positions[a].x, ghost_positions[a].y);
 	}
 
 	for (Ghost& ghost : ghosts)
@@ -42,9 +42,9 @@ void GhostManager::reset(unsigned char i_level, const std::array<Position, 4>& i
 	}
 }
 
-void GhostManager::update(unsigned char i_level, std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& i_map, Pacman& i_pacman)
+void GhostManager::update(unsigned char level, std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& map, Pacman& pacman)
 {
-	if (!i_pacman.get_energizer_timer()) //We won't update the wave timer when Pacman is energized.
+	if (!pacman.get_energizer_timer()) //We won't update the wave timer when Pacman is energized.
 	{
 		if (!wave_timer)
 		{
@@ -65,11 +65,11 @@ void GhostManager::update(unsigned char i_level, std::array<std::array<Cell, MAP
 			}
 			else if (current_wave)
 			{
-				wave_timer = static_cast<unsigned short>(LONG_SCATTER_DURATION / pow(2, i_level));
+				wave_timer = static_cast<unsigned short>(LONG_SCATTER_DURATION / pow(2, level));
 			}
 			else
 			{
-				wave_timer = static_cast<unsigned short>(SHORT_SCATTER_DURATION / pow(2, i_level));
+				wave_timer = static_cast<unsigned short>(SHORT_SCATTER_DURATION / pow(2, level));
 			}
 		}
 		else
@@ -80,6 +80,6 @@ void GhostManager::update(unsigned char i_level, std::array<std::array<Cell, MAP
 
 	for (Ghost& ghost : ghosts)
 	{
-		ghost.update(i_level, i_map, ghosts[0], i_pacman);
+		ghost.update(level, map, ghosts[0], pacman);
 	}
 }

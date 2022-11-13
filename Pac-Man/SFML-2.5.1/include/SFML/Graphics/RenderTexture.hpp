@@ -166,7 +166,7 @@ public:
     /// \brief Generate a mipmap using the current texture data
     ///
     /// This function is similar to Texture::generateMipmap and operates
-    /// on the texture used as the target for drawing.
+    /// on the texture used as the target_position for drawing.
     /// Be aware that any draw operation may modify the base level image data.
     /// For this reason, calling this function only makes sense after all
     /// drawing is completed and display has been called. Not calling display
@@ -185,7 +185,7 @@ public:
     /// future OpenGL rendering operations (so you shouldn't care
     /// about it if you're not doing direct OpenGL stuff).
     /// Only one context can be current in a thread, so if you
-    /// want to draw OpenGL geometry to another render target
+    /// want to draw OpenGL geometry to another render target_position
     /// (like a RenderWindow) don't forget to activate it again.
     ///
     /// \param active True to activate, false to deactivate
@@ -196,9 +196,9 @@ public:
     bool setActive(bool active = true);
 
     ////////////////////////////////////////////////////////////
-    /// \brief Update the contents of the target texture
+    /// \brief Update the contents of the target_position texture
     ///
-    /// This function updates the target texture with what
+    /// This function updates the target_position texture with what
     /// has been drawn so far. Like for windows, calling this
     /// function is mandatory at the end of rendering. Not calling
     /// it may leave the texture in an undefined state.
@@ -218,7 +218,7 @@ public:
     virtual Vector2u getSize() const;
 
     ////////////////////////////////////////////////////////////
-    /// \brief Get a read-only reference to the target texture
+    /// \brief Get a read-only reference to the target_position texture
     ///
     /// After drawing to the render-texture and calling Display,
     /// you can retrieve the updated texture using this function,

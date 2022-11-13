@@ -6,7 +6,7 @@
 #include "Pacman.h"
 #include "ConvertSketch.h"
 
-std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH> convert_sketch(const std::array<std::string, MAP_HEIGHT>& i_map_sketch, std::array<Position, 4>& i_ghost_positions, Pacman& i_pacman)
+std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH> convert_sketch(const std::array<std::string, MAP_HEIGHT>& map_sketch, std::array<Position, 4>& ghost_positions, Pacman& pacman)
 {
 	//Is it okay if I put {} here? I feel like I'm doing something illegal.
 	//But if I don't put it there, Visual Studio keeps saying "lOcAl vArIaBlE Is nOt iNiTiAlIzEd".
@@ -19,7 +19,7 @@ std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH> convert_sketch(const std::ar
 			//By default, every cell is empty.
 			output_map[b][a] = Cell::Empty;
 
-			switch (i_map_sketch[a][b])
+			switch (map_sketch[a][b])
 			{
 				//#wall #obstacle #youcantgothroughme
 			case '#':
@@ -43,39 +43,39 @@ std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH> convert_sketch(const std::ar
 			//Red ghost
 			case '0':
 			{
-				i_ghost_positions[0].x = CELL_SIZE * b;
-				i_ghost_positions[0].y = CELL_SIZE * a;
+				ghost_positions[0].x = CELL_SIZE * b;
+				ghost_positions[0].y = CELL_SIZE * a;
 
 				break;
 			}
 			//Pink ghost
 			case '1':
 			{
-				i_ghost_positions[1].x = CELL_SIZE * b;
-				i_ghost_positions[1].y = CELL_SIZE * a;
+				ghost_positions[1].x = CELL_SIZE * b;
+				ghost_positions[1].y = CELL_SIZE * a;
 
 				break;
 			}
 			//Blue (cyan) ghost
 			case '2':
 			{
-				i_ghost_positions[2].x = CELL_SIZE * b;
-				i_ghost_positions[2].y = CELL_SIZE * a;
+				ghost_positions[2].x = CELL_SIZE * b;
+				ghost_positions[2].y = CELL_SIZE * a;
 
 				break;
 			}
 			//Orange ghost
 			case '3':
 			{
-				i_ghost_positions[3].x = CELL_SIZE * b;
-				i_ghost_positions[3].y = CELL_SIZE * a;
+				ghost_positions[3].x = CELL_SIZE * b;
+				ghost_positions[3].y = CELL_SIZE * a;
 
 				break;
 			}
 			//Pacman!
 			case 'P':
 			{
-				i_pacman.set_position(CELL_SIZE * b, CELL_SIZE * a);
+				pacman.set_position(CELL_SIZE * b, CELL_SIZE * a);
 
 				break;
 			}

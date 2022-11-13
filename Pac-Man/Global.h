@@ -7,9 +7,9 @@ constexpr unsigned char FONT_HEIGHT = 16;
 //Okay, I'll explain this.
 //I start counting everything from 0, so this is actually the second ghost.
 //The website used smaller cells, so I'm setting smaller values.
-//Which cell in front of Pacman the pink ghost will target.
+//Which cell in front of Pacman the pink ghost will target_position.
 constexpr unsigned char GHOST_1_CHASE = 2;
-//Which cell in front of Pacman the blue ghost will use to calculate the target.
+//Which cell in front of Pacman the blue ghost will use to calculate the target_position.
 constexpr unsigned char GHOST_2_CHASE = 1;
 //If the distance between the orange ghost and Pacman is less than this value, the orange ghost will go into the scatter mode.
 constexpr unsigned char GHOST_3_CHASE = 4;
