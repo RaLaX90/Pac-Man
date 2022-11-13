@@ -14,8 +14,8 @@ Pacman::Pacman() :
 	energizer_timer(0),
 	position({ 0, 0 })
 {
-	//I just realized that I already explained everything in the Ghost class.
-	//And I don't like to repeat myself.
+	texture_dead.loadFromFile("Images/PacmanDeath" + std::to_string(CELL_SIZE) + ".png");
+	texture_alive.loadFromFile("Images/Pacman" + std::to_string(CELL_SIZE) + ".png");
 }
 
 bool Pacman::get_animation_over()
@@ -38,43 +38,37 @@ unsigned short Pacman::get_energizer_timer()
 	return energizer_timer;
 }
 
-void Pacman::draw(bool i_victory, sf::RenderWindow& i_window)
+void Pacman::draw(bool is_victory, sf::RenderWindow& window)
 {
 	unsigned char frame = static_cast<unsigned char>(floor(animation_timer / static_cast<float>(PACMAN_ANIMATION_SPEED)));
 
 	sf::Sprite sprite;
 
-	sf::Texture texture;
-
 	sprite.setPosition(position.x, position.y);
 
-	if (dead || i_victory)
+	if (dead || is_victory)
 	{
 		if (animation_timer < PACMAN_DEATH_FRAMES * PACMAN_ANIMATION_SPEED)
 		{
 			animation_timer++;
 
-			texture.loadFromFile("Images/PacmanDeath" + std::to_string(CELL_SIZE) + ".png");
-
-			sprite.setTexture(texture);
+			sprite.setTexture(texture_dead);
 			sprite.setTextureRect(sf::IntRect(CELL_SIZE * frame, 0, CELL_SIZE, CELL_SIZE));
 
-			i_window.draw(sprite);
+			window.draw(sprite);
 		}
 		else
 		{
 			//You can only die once.
-			animation_over = 1;
+			animation_over = true;
 		}
 	}
 	else
 	{
-		texture.loadFromFile("Images/Pacman" + std::to_string(CELL_SIZE) + ".png");
-
-		sprite.setTexture(texture);
+		sprite.setTexture(texture_alive);
 		sprite.setTextureRect(sf::IntRect(CELL_SIZE * frame, CELL_SIZE * direction, CELL_SIZE, CELL_SIZE));
 
-		i_window.draw(sprite);
+		window.draw(sprite);
 
 		animation_timer = (1 + animation_timer) % (PACMAN_ANIMATION_FRAMES * PACMAN_ANIMATION_SPEED);
 	}
@@ -82,13 +76,15 @@ void Pacman::draw(bool i_victory, sf::RenderWindow& i_window)
 
 void Pacman::reset()
 {
-	animation_over = 0;
-	dead = 0;
+	animation_over = false;
+	dead = false;
 
 	direction = 0;
 
 	animation_timer = 0;
 	energizer_timer = 0;
+
+	set_position(start_position.x, start_position.y);
 }
 
 void Pacman::set_animation_timer(unsigned short i_animation_timer)
@@ -96,9 +92,9 @@ void Pacman::set_animation_timer(unsigned short i_animation_timer)
 	animation_timer = i_animation_timer;
 }
 
-void Pacman::set_dead(bool i_dead)
+void Pacman::set_dead(bool is_dead)
 {
-	dead = i_dead;
+	dead = is_dead;
 
 	if (dead)
 	{
@@ -107,18 +103,18 @@ void Pacman::set_dead(bool i_dead)
 	}
 }
 
-void Pacman::set_position(short i_x, short i_y)
+void Pacman::set_position(short x, short y)
 {
-	position = { i_x, i_y };
+	position = { x, y };
 }
 
-void Pacman::update(unsigned char i_level, std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& i_map)
+void Pacman::move(unsigned char level, std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& map)
 {
 	std::array<bool, 4> walls{};
-	walls[0] = is_map_collision(false, false, PACMAN_SPEED + position.x, position.y, i_map);
-	walls[1] = is_map_collision(false, false, position.x, position.y - PACMAN_SPEED, i_map);
-	walls[2] = is_map_collision(false, false, position.x - PACMAN_SPEED, position.y, i_map);
-	walls[3] = is_map_collision(false, false, position.x, PACMAN_SPEED + position.y, i_map);
+	walls[0] = is_map_collision(false, false, PACMAN_SPEED + position.x, position.y, map);
+	walls[1] = is_map_collision(false, false, position.x, position.y - PACMAN_SPEED, map);
+	walls[2] = is_map_collision(false, false, position.x - PACMAN_SPEED, position.y, map);
+	walls[3] = is_map_collision(false, false, position.x, PACMAN_SPEED + position.y, map);
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 	{
@@ -190,15 +186,21 @@ void Pacman::update(unsigned char i_level, std::array<std::array<Cell, MAP_HEIGH
 		position.x = PACMAN_SPEED - CELL_SIZE;
 	}
 
-	if (is_map_collision(true, false, position.x, position.y, i_map)) //When Pacman eats an energizer...
+	if (is_map_collision(true, false, position.x, position.y, map)) //When Pacman eats an energizer...
 	{
 		//He becomes energized!
-		energizer_timer = static_cast<unsigned short>(ENERGIZER_DURATION / pow(2, i_level));
+		energizer_timer = static_cast<unsigned short>(ENERGIZER_DURATION / pow(2, level));
 	}
 	else
 	{
 		energizer_timer = std::max(0, energizer_timer - 1);
 	}
+}
+
+void Pacman::set_start_position(const Position& i_start_position)
+{
+	start_position.x = i_start_position.x;
+	start_position.y = i_start_position.y;
 }
 
 Position Pacman::get_position()

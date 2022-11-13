@@ -253,7 +253,7 @@ public:
     /// \param pixels Array of pixels to copy to the texture
     ///
     ////////////////////////////////////////////////////////////
-    void update(const Uint8* pixels);
+    void move(const Uint8* pixels);
 
     ////////////////////////////////////////////////////////////
     /// \brief Update a part of the texture from an array of pixels
@@ -262,7 +262,7 @@ public:
     /// \a height arguments, and it must contain 32-bits RGBA pixels.
     ///
     /// No additional check is performed on the size of the pixel
-    /// array or the bounds of the area to update, passing invalid
+    /// array or the bounds of the area to move, passing invalid
     /// arguments will lead to an undefined behavior.
     ///
     /// This function does nothing if \a pixels is null or if the
@@ -275,7 +275,7 @@ public:
     /// \param y      Y offset in the texture where to copy the source pixels
     ///
     ////////////////////////////////////////////////////////////
-    void update(const Uint8* pixels, unsigned int width, unsigned int height, unsigned int x, unsigned int y);
+    void move(const Uint8* pixels, unsigned int width, unsigned int height, unsigned int x, unsigned int y);
 
     ////////////////////////////////////////////////////////////
     /// \brief Update a part of this texture from another texture
@@ -295,7 +295,7 @@ public:
     /// \param texture Source texture to copy to this texture
     ///
     ////////////////////////////////////////////////////////////
-    void update(const Texture& texture);
+    void move(const Texture& texture);
 
     ////////////////////////////////////////////////////////////
     /// \brief Update a part of this texture from another texture
@@ -312,7 +312,7 @@ public:
     /// \param y       Y offset in this texture where to copy the source texture
     ///
     ////////////////////////////////////////////////////////////
-    void update(const Texture& texture, unsigned int x, unsigned int y);
+    void move(const Texture& texture, unsigned int x, unsigned int y);
 
     ////////////////////////////////////////////////////////////
     /// \brief Update the texture from an image
@@ -332,7 +332,7 @@ public:
     /// \param image Image to copy to the texture
     ///
     ////////////////////////////////////////////////////////////
-    void update(const Image& image);
+    void move(const Image& image);
 
     ////////////////////////////////////////////////////////////
     /// \brief Update a part of the texture from an image
@@ -349,7 +349,7 @@ public:
     /// \param y     Y offset in the texture where to copy the source image
     ///
     ////////////////////////////////////////////////////////////
-    void update(const Image& image, unsigned int x, unsigned int y);
+    void move(const Image& image, unsigned int x, unsigned int y);
 
     ////////////////////////////////////////////////////////////
     /// \brief Update the texture from the contents of a window
@@ -369,7 +369,7 @@ public:
     /// \param window Window to copy to the texture
     ///
     ////////////////////////////////////////////////////////////
-    void update(const Window& window);
+    void move(const Window& window);
 
     ////////////////////////////////////////////////////////////
     /// \brief Update a part of the texture from the contents of a window
@@ -386,7 +386,7 @@ public:
     /// \param y      Y offset in the texture where to copy the source window
     ///
     ////////////////////////////////////////////////////////////
-    void update(const Window& window, unsigned int x, unsigned int y);
+    void move(const Window& window, unsigned int x, unsigned int y);
 
     ////////////////////////////////////////////////////////////
     /// \brief Enable or disable the smooth filter
@@ -646,7 +646,7 @@ private:
 /// Being stored in the graphics card memory has some drawbacks.
 /// A texture cannot be manipulated as freely as a sf::Image,
 /// you need to prepare the pixels first and then upload them
-/// to the texture in a single operation (see Texture::update).
+/// to the texture in a single operation (see Texture::move).
 ///
 /// sf::Texture makes it easy to convert from/to sf::Image, but
 /// keep in mind that these calls require transfers between
@@ -707,9 +707,9 @@ private:
 /// {
 ///     ...
 ///
-///     // update the texture
+///     // move the texture
 ///     sf::Uint8* pixels = ...; // get a fresh chunk of pixels (the next frame of a movie, for example)
-///     texture.update(pixels);
+///     texture.move(pixels);
 ///
 ///     // draw it
 ///     window.draw(sprite);

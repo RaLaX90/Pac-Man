@@ -7,12 +7,12 @@
 #include "Ghost.h"
 #include "MapCollision.h"
 
-Ghost::Ghost(unsigned char id) :
-	id(id)
+Ghost::Ghost(unsigned char i_id, const Position& start_position, const Position& exit_position) :
+	id(i_id),
+	start_position(start_position),
+	door_position(exit_position)
 {
-	//I keep writing "gohst" instead of "gohst" (THERE! I did it again!).
-	//So in this file I'll write only "gohst".
-	//Enjoy!
+
 }
 
 bool Ghost::pacman_collision(const Position& pacman_position)
@@ -35,7 +35,7 @@ float Ghost::get_target_distance(unsigned char direction)
 	short x = position.x;
 	short y = position.y;
 
-	//We'll imaginarily move the gohst in a given direction and calculate the distance to the target_position.
+	//We'll imaginarily move the ghost in a given direction and calculate the distance to the target_position.
 	switch (direction)
 	{
 	case 0:
@@ -129,10 +129,10 @@ void Ghost::draw(bool flash, sf::RenderWindow& window)
 	else if (1 == frightened_mode)
 	{
 		body.setColor(sf::Color(36, 36, 255));
-		//The face remains the same regardless of where the gohst is going right now.
+		//The face remains the same regardless of where the ghost is going right now.
 		face.setTextureRect(sf::IntRect(4 * CELL_SIZE, CELL_SIZE, CELL_SIZE, CELL_SIZE));
 
-		if (flash && !body_frame % 2)
+		if (flash && 0 == body_frame % 2)
 		{
 			body.setColor(sf::Color(255, 255, 255));
 			face.setColor(sf::Color(255, 0, 0));
@@ -158,9 +158,9 @@ void Ghost::draw(bool flash, sf::RenderWindow& window)
 	animation_timer = (1 + animation_timer) % (GHOST_ANIMATION_FRAMES * GHOST_ANIMATION_SPEED);
 }
 
-void Ghost::reset(const Position& start_position, const Position& exit_position)
+void Ghost::reset(/*const Position& start_position, const Position& exit_position*/)
 {
-	movement_mode = false;
+	fear_mode = false;
 	//Everyone can use the door except the red ghost.
 	//Because I hate the red ghost.
 	is_can_use_door = 0 < id;
@@ -171,9 +171,10 @@ void Ghost::reset(const Position& start_position, const Position& exit_position)
 
 	animation_timer = 0;
 
-	home_position = start_position;
-	door_position = exit_position;
-	target_position = exit_position;
+	set_position(start_position.x, start_position.y);
+	//start_position = start_position;
+	//door_position = exit_position;
+	target_position = door_position;
 }
 
 void Ghost::set_position(short x, short y)
@@ -183,22 +184,22 @@ void Ghost::set_position(short x, short y)
 
 void Ghost::switch_mode()
 {
-	movement_mode = !movement_mode;
+	fear_mode = !fear_mode;
 }
 
-void Ghost::update(unsigned char level, std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& map, Ghost& ghost_0, Pacman& pacman)
+void Ghost::move(unsigned char level, std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& map, Ghost& ghost_0, Pacman& pacman)
 {
 	//Can the ghost move?
 	bool move = false;
 
-	//If this is greater than 1, that means that the gohst has reached the intersection.
+	//If this is greater than 1, that means that the ghost has reached the intersection.
 	//We don't consider the way back as an available way.
 	unsigned char available_ways = 0;
 	unsigned char speed = GHOST_SPEED;
 
 	std::array<bool, 4> walls{};
 
-	//Here the gohst starts and stops being frightened.
+	//Here the ghost starts and stops being frightened.
 	if (0 == frightened_mode && pacman.get_energizer_timer() == ENERGIZER_DURATION / pow(2, level))
 	{
 		frightened_speed_timer = GHOST_FRIGHTENED_SPEED;
@@ -210,7 +211,7 @@ void Ghost::update(unsigned char level, std::array<std::array<Cell, MAP_HEIGHT>,
 		frightened_mode = 0;
 	}
 
-	//I used the modulo operator in case the gohst goes outside the grid.
+	//I used the modulo operator in case the ghost goes outside the grid.
 	if (2 == frightened_mode && 0 == position.x % GHOST_ESCAPE_SPEED && 0 == position.y % GHOST_ESCAPE_SPEED)
 	{
 		speed = GHOST_ESCAPE_SPEED;
@@ -226,20 +227,20 @@ void Ghost::update(unsigned char level, std::array<std::array<Cell, MAP_HEIGHT>,
 
 	if (1 != frightened_mode)
 	{
-		//I used 4 because using a number between 0 and 3 will make the gohst move in a direction it can't move.
+		//I used 4 because using a number between 0 and 3 will make the ghost move in a direction it can't move.
 		unsigned char optimal_direction = 4;
 
-		//The gohst can move.
+		//The ghost can move.
 		move = 1;
 
 		for (unsigned char a = 0; a < 4; a++)
 		{
-			//Gohsts can't turn back! (Unless they really have to)
+			//ghosts can't turn back! (Unless they really have to)
 			if (a == (2 + direction) % 4)
 			{
 				continue;
 			}
-			else if (0 == walls[a])
+			else if (!walls[a])
 			{
 				if (4 == optimal_direction)
 				{
@@ -258,7 +259,7 @@ void Ghost::update(unsigned char level, std::array<std::array<Cell, MAP_HEIGHT>,
 
 		if (1 < available_ways)
 		{
-			//When the gohst is at the intersection, it chooses the optimal direction.
+			//When the ghost is at the intersection, it chooses the optimal direction.
 			direction = optimal_direction;
 		}
 		else
@@ -281,7 +282,7 @@ void Ghost::update(unsigned char level, std::array<std::array<Cell, MAP_HEIGHT>,
 
 		if (0 == frightened_speed_timer)
 		{
-			//The gohst can move after a certain number of frames.
+			//The ghost can move after a certain number of frames.
 			move = 1;
 
 			frightened_speed_timer = GHOST_FRIGHTENED_SPEED;
@@ -293,7 +294,7 @@ void Ghost::update(unsigned char level, std::array<std::array<Cell, MAP_HEIGHT>,
 				{
 					continue;
 				}
-				else if (0 == walls[a])
+				else if (!walls[a])
 				{
 					available_ways++;
 				}
@@ -301,7 +302,7 @@ void Ghost::update(unsigned char level, std::array<std::array<Cell, MAP_HEIGHT>,
 
 			if (0 < available_ways)
 			{
-				while (1 == walls[random_direction] || random_direction == (2 + direction) % 4)
+				while (walls[random_direction] || random_direction == (2 + direction) % 4)
 				{
 					//We keep picking a random direction until we can use it.
 					random_direction = rand() % 4;
@@ -321,7 +322,7 @@ void Ghost::update(unsigned char level, std::array<std::array<Cell, MAP_HEIGHT>,
 		}
 	}
 
-	//If the gohst can move, we move it.
+	//If the ghost can move, we move it.
 	if (move)
 	{
 		switch (direction)
@@ -351,7 +352,7 @@ void Ghost::update(unsigned char level, std::array<std::array<Cell, MAP_HEIGHT>,
 		}
 
 		//Warping.
-		//When the gohst leaves the map, we move it to the other side.
+		//When the ghost leaves the map, we move it to the other side.
 		if (-CELL_SIZE >= position.x)
 		{
 			position.x = CELL_SIZE * MAP_WIDTH - speed;
@@ -364,32 +365,32 @@ void Ghost::update(unsigned char level, std::array<std::array<Cell, MAP_HEIGHT>,
 
 	if (pacman_collision(pacman.get_position()))
 	{
-		if (!frightened_mode) //When the gohst is not frightened and collides with Pacman, we kill Pacman.
+		if (!frightened_mode) //When the ghost is not frightened and collides with Pacman, we kill Pacman.
 		{
 			pacman.set_dead(1);
 		}
-		else //Otherwise, the gohst starts running towards the house.
+		else //Otherwise, the ghost starts running towards the house.
 		{
 			is_can_use_door = 1;
 
 			frightened_mode = 2;
 
-			target_position = home_position;
+			target_position = start_position;
 		}
 	}
 }
 
 void Ghost::update_target(unsigned char pacman_direction, const Position& ghost_0_position, const Position& pacman_position)
 {
-	if (is_can_use_door) //If the gohst can use the door.
+	if (is_can_use_door) //If the ghost can use the door.
 	{
 		if (position == target_position)
 		{
-			if (door_position == target_position) //If the gohst has reached the exit.
+			if (door_position == target_position) //If the ghost has reached the exit.
 			{
 				is_can_use_door = false; //It can no longer use the door.
 			}
-			else if (home_position == target_position) //If the gohst has reached its start_position.
+			else if (start_position == target_position) //If the ghost has reached its start_position.
 			{
 				frightened_mode = 0; //It stops being frightened.
 
@@ -399,7 +400,7 @@ void Ghost::update_target(unsigned char pacman_direction, const Position& ghost_
 	}
 	else
 	{
-		if (!movement_mode) //The scatter mode
+		if (!fear_mode) //The scatter mode
 		{
 			//Each ghost goes to the corner it's assigned to.
 			switch (id)

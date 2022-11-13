@@ -15,7 +15,7 @@
 int main()
 {
 	//Is the game won?
-	bool game_won = 0;
+	bool game_won = false;
 
 	//Used to make the game framerate-independent.
 	unsigned lag = 0;
@@ -52,9 +52,6 @@ int main()
 
 	std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH> map{};
 
-	//Initial ghost positions.
-	std::array<Position, 4> ghost_positions;
-
 	//SFML thing. Stores events, I think.
 	sf::Event event;
 
@@ -62,17 +59,21 @@ int main()
 	//Resizing the window.
 	window.setView(sf::View(sf::FloatRect(0, 0, CELL_SIZE * MAP_WIDTH, FONT_HEIGHT + CELL_SIZE * MAP_HEIGHT)));
 
-	GhostManager ghost_manager;
-
-	Pacman pacman;
-
 	//Generating a random seed.
 	srand(static_cast<unsigned>(time(0)));
 
-	map = convert_sketch(map_sketch, ghost_positions, pacman);
+	Pacman pacman;
 
-	ghost_manager.reset(level, ghost_positions);
+	//Initial ghost positions.
+	std::array<Position, 4> ghost_home_positions;
 
+	map = convert_sketch(map_sketch, ghost_home_positions, pacman);
+
+	GhostManager ghost_manager{ ghost_home_positions };
+
+	ghost_manager.reset(level/*, ghost_home_positions*/);
+
+	pacman.reset();
 	//Get the current time and store it in a variable.
 	previous_time = std::chrono::steady_clock::now();
 
@@ -110,11 +111,11 @@ int main()
 
 			if (!game_won && !pacman.is_dead())
 			{
-				game_won = 1;
+				game_won = true;
 
-				pacman.update(level, map);
+				pacman.move(level, map);
 
-				ghost_manager.update(level, map, pacman);
+				ghost_manager.move(level, map, pacman);
 
 				//We're checking every cell in the map.
 				for (const std::array<Cell, MAP_HEIGHT>& column : map)
@@ -123,7 +124,7 @@ int main()
 					{
 						if (Cell::Pellet == cell) //And if at least one of them has a pellet.
 						{
-							game_won = 0; //The game is not yet won.
+							game_won = false; //The game is not yet won.
 
 							break;
 						}
@@ -142,7 +143,7 @@ int main()
 			}
 			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) //Restarting the game.
 			{
-				game_won = 0;
+				game_won = false;
 
 				if (pacman.is_dead())
 				{
@@ -154,9 +155,9 @@ int main()
 					level++;
 				}
 
-				map = convert_sketch(map_sketch, ghost_positions, pacman);
+				map = convert_sketch(map_sketch, ghost_home_positions, pacman);
 
-				ghost_manager.reset(level, ghost_positions);
+				ghost_manager.reset(level/*, ghost_home_positions*/);
 
 				pacman.reset();
 			}
@@ -168,11 +169,14 @@ int main()
 
 				if (!game_won && !pacman.is_dead())
 				{
+					window.clear(sf::Color::Black);
 					draw_map(map, window);
 
 					ghost_manager.draw(GHOST_FLASH_START >= pacman.get_energizer_timer(), window);
 
 					draw_text(false, 0, CELL_SIZE * MAP_HEIGHT, "Level: " + std::to_string(1 + level), window);
+
+					draw_text(false, MAP_WIDTH * 4, CELL_SIZE * MAP_HEIGHT, "Score: " + std::to_string(1 + level), window);
 				}
 
 				pacman.draw(game_won, window);
@@ -190,6 +194,7 @@ int main()
 				}
 
 				window.display();
+
 			}
 		}
 	}

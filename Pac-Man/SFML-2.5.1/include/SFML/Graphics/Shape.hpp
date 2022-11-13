@@ -263,7 +263,7 @@ protected:
     /// getPointCount or getPoint is different).
     ///
     ////////////////////////////////////////////////////////////
-    void update();
+    void move();
 
 private:
 

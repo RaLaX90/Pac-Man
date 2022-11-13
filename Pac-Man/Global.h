@@ -56,8 +56,8 @@ struct Position
 	short y;
 
 	//See? I'm an expert.
-	bool operator==(const Position& i_position)
+	bool operator==(const Position& another_ghost_position)
 	{
-		return this->x == i_position.x && this->y == i_position.y;
+		return this->x == another_ghost_position.x && this->y == another_ghost_position.y;
 	}
 };

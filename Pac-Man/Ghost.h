@@ -3,7 +3,7 @@
 class Ghost
 {
 	//It can be the scatter mode or the chase mode.
-	bool movement_mode;
+	bool fear_mode;
 	//"Can I use the door, pwease?"
 	bool is_can_use_door;
 
@@ -24,26 +24,26 @@ class Ghost
 	unsigned short animation_timer;
 
 	//The ghost will go here when escaping.
-	Position home_position;
+	Position start_position;
 	//You can't stay in your house forever (sadly).
 	Position door_position;
 	//Current position.
 	Position position;
-	//Current target_position.
+	//Current target position.
 	Position target_position;
 public:
-	Ghost(unsigned char i_id);
+	Ghost(unsigned char i_id, const Position& start_position, const Position& exit_position);
 
-	bool pacman_collision(const Position& i_pacman_position);
+	bool pacman_collision(const Position& pacman_position);
 
-	float get_target_distance(unsigned char i_direction);
+	float get_target_distance(unsigned char direction);
 
-	void draw(bool i_flash, sf::RenderWindow& i_window);
-	void reset(const Position& i_home, const Position& i_home_exit);
-	void set_position(short i_x, short i_y);
+	void draw(bool flash, sf::RenderWindow& window);
+	void reset(/*const Position& start_position, const Position& exit_position*/);
+	void set_position(short x, short y);
 	void switch_mode();
-	void update(unsigned char i_level, std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& i_map, Ghost& i_ghost_0, Pacman& i_pacman);
-	void update_target(unsigned char i_pacman_direction, const Position& i_ghost_0_position, const Position& i_pacman_position);
+	void move(unsigned char level, std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& map, Ghost& ghost_0, Pacman& pacman);
+	void update_target(unsigned char pacman_direction, const Position& ghost_0_position, const Position& pacman_position);
 
 	Position get_position();
 };

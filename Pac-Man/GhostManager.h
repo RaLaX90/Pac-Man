@@ -11,9 +11,9 @@ class GhostManager
 
 	std::array<Ghost, 4> ghosts;
 public:
-	GhostManager();
+	GhostManager(const std::array<Position, 4>& ghost_positions);
 
-	void draw(bool i_flash, sf::RenderWindow& i_window);
-	void reset(unsigned char i_level, const std::array<Position, 4>& i_ghost_positions);
-	void update(unsigned char i_level, std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& i_map, Pacman& i_pacman);
+	void draw(bool flash, sf::RenderWindow& window);
+	void reset(unsigned char level/*, const std::array<Position, 4>& ghost_positions*/);
+	void move(unsigned char level, std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& map, Pacman& pacman);
 };

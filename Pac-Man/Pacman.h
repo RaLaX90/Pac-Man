@@ -7,7 +7,12 @@ class Pacman
 	//Am I dead?
 	bool dead;
 
+	Position start_position;
+
 	unsigned char direction;
+
+	sf::Texture texture_dead;
+	sf::Texture texture_alive;
 
 	//More timers!
 	unsigned short animation_timer;
@@ -25,12 +30,13 @@ public:
 
 	unsigned short get_energizer_timer();
 
-	void draw(bool i_victory, sf::RenderWindow& i_window);
+	void draw(bool is_victory, sf::RenderWindow& window);
 	void reset();
 	void set_animation_timer(unsigned short i_animation_timer);
-	void set_dead(bool i_dead);
-	void set_position(short i_x, short i_y);
-	void update(unsigned char i_level, std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& i_map);
+	void set_dead(bool is_dead);
+	void set_position(short x, short y);
+	void move(unsigned char level, std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& map);
 
+	void set_start_position(const Position& i_start_position);
 	Position get_position();
 };

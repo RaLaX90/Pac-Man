@@ -48,10 +48,10 @@ void draw_map(const std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& map, sf
 			}
 			case Cell::Wall:
 			{
-				bool down = 0;
-				bool left = 0;
-				bool right = 0;
-				bool up = 0;
+				unsigned char down = 0;
+				unsigned char left = 0;
+				unsigned char right = 0;
+				unsigned char up = 0;
 
 				if (b < MAP_HEIGHT - 1)
 				{
@@ -98,6 +98,11 @@ void draw_map(const std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& map, sf
 				sprite.setTextureRect(sf::IntRect(CELL_SIZE * (down + 2 * (left + 2 * (right + 2 * up))), 0, CELL_SIZE, CELL_SIZE));
 
 				window.draw(sprite);
+
+				break;
+			}
+			default: {
+				break;
 			}
 			}
 		}

@@ -75,7 +75,7 @@ std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH> convert_sketch(const std::ar
 			//Pacman!
 			case 'P':
 			{
-				pacman.set_position(CELL_SIZE * b, CELL_SIZE * a);
+				pacman.set_start_position({ CELL_SIZE * b, CELL_SIZE * a });
 
 				break;
 			}

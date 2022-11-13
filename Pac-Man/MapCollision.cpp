@@ -6,7 +6,7 @@
 
 bool is_map_collision(bool is_collecting_pellets, bool is_using_door, short x, short y, std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& map)
 {
-	bool output = 0;
+	bool output = false;
 
 	//Getting the exact position.
 	float cell_x = x / static_cast<float>(CELL_SIZE);
@@ -49,24 +49,24 @@ bool is_map_collision(bool is_collecting_pellets, bool is_using_door, short x, s
 		}
 
 		//Making sure that the position is inside the map.
-		if (0 <= x && 0 <= y && MAP_HEIGHT > y && MAP_WIDTH > x)
+		if ((0 <= x && x < MAP_WIDTH) && (0 <= y && y < MAP_HEIGHT))
 		{
 			if (!is_collecting_pellets) //Here we only care about the walls.
 			{
 				if (Cell::Wall == map[x][y])
 				{
-					output = 1;
+					output = true;
 				}
 				else if (!is_using_door && Cell::Door == map[x][y])
 				{
-					output = 1;
+					output = true;
 				}
 			}
 			else //Here we only care about the collectables.
 			{
 				if (Cell::Energizer == map[x][y])
 				{
-					output = 1;
+					output = true;
 
 					map[x][y] = Cell::Empty;
 				}

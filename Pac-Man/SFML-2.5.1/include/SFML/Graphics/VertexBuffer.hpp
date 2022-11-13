@@ -159,10 +159,10 @@ public:
     ///
     /// \param vertices Array of vertices to copy to the buffer
     ///
-    /// \return True if the update was successful
+    /// \return True if the move was successful
     ///
     ////////////////////////////////////////////////////////////
-    bool update(const Vertex* vertices);
+    bool move(const Vertex* vertices);
 
     ////////////////////////////////////////////////////////////
     /// \brief Update a part of the buffer from an array of vertices
@@ -182,7 +182,7 @@ public:
     /// is updated.
     ///
     /// If \p offset is not 0 and \p offset + \p vertexCount is greater
-    /// than the size of the currently created buffer, the update fails.
+    /// than the size of the currently created buffer, the move fails.
     ///
     /// No additional check is performed on the size of the vertex
     /// array, passing invalid arguments will lead to undefined
@@ -192,10 +192,10 @@ public:
     /// \param vertexCount Number of vertices to copy
     /// \param offset      Offset in the buffer to copy to
     ///
-    /// \return True if the update was successful
+    /// \return True if the move was successful
     ///
     ////////////////////////////////////////////////////////////
-    bool update(const Vertex* vertices, std::size_t vertexCount, unsigned int offset);
+    bool move(const Vertex* vertices, std::size_t vertexCount, unsigned int offset);
 
     ////////////////////////////////////////////////////////////
     /// \brief Copy the contents of another buffer into this buffer
@@ -205,7 +205,7 @@ public:
     /// \return True if the copy was successful
     ///
     ////////////////////////////////////////////////////////////
-    bool update(const VertexBuffer& vertexBuffer);
+    bool move(const VertexBuffer& vertexBuffer);
 
     ////////////////////////////////////////////////////////////
     /// \brief Overload of assignment operator
@@ -262,7 +262,7 @@ public:
     /// \brief Set the usage specifier of this vertex buffer
     ///
     /// This function provides a hint about how this vertex buffer is
-    /// going to be used in terms of data update frequency.
+    /// going to be used in terms of data move frequency.
     ///
     /// After changing the usage specifier, the vertex buffer has
     /// to be updated with new data for the usage specifier to
@@ -371,7 +371,7 @@ private:
 /// the application. This allows the user to take full control of data
 /// transfers between system and graphics memory if they need to.
 ///
-/// In special cases, the user can make use of multiple threads to update
+/// In special cases, the user can make use of multiple threads to move
 /// vertex data in multiple distinct regions of the buffer simultaneously.
 /// This might make sense when e.g. the position of multiple objects has to
 /// be recalculated very frequently. The computation load can be spread
@@ -398,7 +398,7 @@ private:
 /// ...
 /// sf::VertexBuffer triangles(sf::Triangles);
 /// triangles.create(15);
-/// triangles.update(vertices);
+/// triangles.move(vertices);
 /// ...
 /// window.draw(triangles);
 /// \endcode
