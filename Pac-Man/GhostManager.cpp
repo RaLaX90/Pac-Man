@@ -1,14 +1,6 @@
-#include <array>
-#include <cmath>
-#include <SFML/Graphics.hpp>
-
-#include "Global.h"
-#include "Pacman.h"
-#include "Ghost.h"
 #include "GhostManager.h"
 
 GhostManager::GhostManager(const std::array<Position, 4>& ghost_positions) :
-	current_wave(0),
 	wave_timer(LONG_SCATTER_DURATION),
 	ghosts({
 		Ghost(0, {ghost_positions[0].x, ghost_positions[0].y}, {ghost_positions[0].x, ghost_positions[0].y}),
@@ -19,6 +11,10 @@ GhostManager::GhostManager(const std::array<Position, 4>& ghost_positions) :
 
 }
 
+GhostManager::~GhostManager()
+{
+}
+
 void GhostManager::draw(bool flash, sf::RenderWindow& window)
 {
 	for (Ghost& ghost : ghosts)
@@ -27,7 +23,7 @@ void GhostManager::draw(bool flash, sf::RenderWindow& window)
 	}
 }
 
-void GhostManager::reset(unsigned char level/*, const std::array<Position, 4>& ghost_positions*/)
+void GhostManager::reset(unsigned char level)
 {
 	current_wave = 0;
 
@@ -36,18 +32,11 @@ void GhostManager::reset(unsigned char level/*, const std::array<Position, 4>& g
 
 	for (unsigned char a = 0; a < ghosts.size(); a++)
 	{
-		//ghosts[a].set_position(ghost_positions[a].x, ghost_positions[a].y);
 		ghosts[a].reset();
 	}
-
-	//for (Ghost& ghost : ghosts)
-	//{
-	//	//We use the blue ghost to get the location of the house and the red ghost to get the location of the exit.
-	//	ghost.reset(/*ghosts[2].get_position(), ghosts[0].get_position()*/);
-	//}
 }
 
-void GhostManager::move(unsigned char level, std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& map, Pacman& pacman)
+void GhostManager::move_ghosts(unsigned char level, std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& map, Pacman& pacman)
 {
 	if (!pacman.get_energizer_timer()) //We won't move the wave timer when Pacman is energized.
 	{

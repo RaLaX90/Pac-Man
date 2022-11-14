@@ -1,33 +1,29 @@
-#include <array>
-#include <cmath>
-#include <SFML/Graphics.hpp>
-
-#include "Global.h"
-#include "Pacman.h"
 #include "Ghost.h"
-#include "MapCollision.h"
 
 Ghost::Ghost(unsigned char i_id, const Position& start_position, const Position& exit_position) :
 	id(i_id),
 	start_position(start_position),
 	door_position(exit_position)
 {
-
+	reset();
 }
 
-bool Ghost::pacman_collision(const Position& pacman_position)
+Ghost::~Ghost()
+{
+}
+
+bool Ghost::is_pacman_collision(const Position& pacman_position)
 {
 	//I used the ADVANCED collision checking algorithm.
-	//Only experts like me can understand this.
 	if (position.x > pacman_position.x - CELL_SIZE && position.x < CELL_SIZE + pacman_position.x)
 	{
 		if (position.y > pacman_position.y - CELL_SIZE && position.y < CELL_SIZE + pacman_position.y)
 		{
-			return 1;
+			return true;
 		}
 	}
 
-	return 0;
+	return false;
 }
 
 float Ghost::get_target_distance(unsigned char direction)
@@ -62,9 +58,7 @@ float Ghost::get_target_distance(unsigned char direction)
 	}
 	}
 
-	//I used the Pythagoras' theorem.
-	//Because I know math.
-	//Are you impressed?
+	//Used the Pythagoras' theorem.
 	return static_cast<float>(sqrt(pow(x - target_position.x, 2) + pow(y - target_position.y, 2)));
 }
 
@@ -158,26 +152,23 @@ void Ghost::draw(bool flash, sf::RenderWindow& window)
 	animation_timer = (1 + animation_timer) % (GHOST_ANIMATION_FRAMES * GHOST_ANIMATION_SPEED);
 }
 
-void Ghost::reset(/*const Position& start_position, const Position& exit_position*/)
+void Ghost::reset()
 {
 	fear_mode = false;
 	//Everyone can use the door except the red ghost.
-	//Because I hate the red ghost.
 	is_can_use_door = 0 < id;
 
-	direction = 0;
+	direction = Direction::Right;
 	frightened_mode = 0;
 	frightened_speed_timer = 0;
-
 	animation_timer = 0;
 
-	set_position(start_position.x, start_position.y);
-	//start_position = start_position;
-	//door_position = exit_position;
 	target_position = door_position;
+
+	set_position(start_position.x, start_position.y);
 }
 
-void Ghost::set_position(short x, short y)
+void Ghost::set_position(float x, float y)
 {
 	position = { x, y };
 }
@@ -195,9 +186,7 @@ void Ghost::move(unsigned char level, std::array<std::array<Cell, MAP_HEIGHT>, M
 	//If this is greater than 1, that means that the ghost has reached the intersection.
 	//We don't consider the way back as an available way.
 	unsigned char available_ways = 0;
-	unsigned char speed = GHOST_SPEED;
-
-	std::array<bool, 4> walls{};
+	float speed = GHOST_SPEED;
 
 	//Here the ghost starts and stops being frightened.
 	if (0 == frightened_mode && pacman.get_energizer_timer() == ENERGIZER_DURATION / pow(2, level))
@@ -212,14 +201,14 @@ void Ghost::move(unsigned char level, std::array<std::array<Cell, MAP_HEIGHT>, M
 	}
 
 	//I used the modulo operator in case the ghost goes outside the grid.
-	if (2 == frightened_mode && 0 == position.x % GHOST_ESCAPE_SPEED && 0 == position.y % GHOST_ESCAPE_SPEED)
+	if (2 == frightened_mode /*&& 0 == position.x % GHOST_ESCAPE_SPEED && 0 == position.y % GHOST_ESCAPE_SPEED*/)
 	{
 		speed = GHOST_ESCAPE_SPEED;
 	}
 
 	update_target(pacman.get_direction(), ghost_0.get_position(), pacman.get_position());
 
-	//This is so clean! I could spend hours staring at it.
+	std::array<bool, 4> walls{};
 	walls[0] = is_map_collision(0, is_can_use_door, speed + position.x, position.y, map);
 	walls[1] = is_map_collision(0, is_can_use_door, position.x, position.y - speed, map);
 	walls[2] = is_map_collision(0, is_can_use_door, position.x - speed, position.y, map);
@@ -231,11 +220,11 @@ void Ghost::move(unsigned char level, std::array<std::array<Cell, MAP_HEIGHT>, M
 		unsigned char optimal_direction = 4;
 
 		//The ghost can move.
-		move = 1;
+		move = true;
 
 		for (unsigned char a = 0; a < 4; a++)
 		{
-			//ghosts can't turn back! (Unless they really have to)
+			//ghosts can't turn back
 			if (a == (2 + direction) % 4)
 			{
 				continue;
@@ -260,18 +249,18 @@ void Ghost::move(unsigned char level, std::array<std::array<Cell, MAP_HEIGHT>, M
 		if (1 < available_ways)
 		{
 			//When the ghost is at the intersection, it chooses the optimal direction.
-			direction = optimal_direction;
+			direction = (Direction)optimal_direction;
 		}
 		else
 		{
 			if (4 == optimal_direction)
 			{
 				//"Unless they have to" part.
-				direction = (2 + direction) % 4;
+				direction = (Direction)((2 + direction) % 4);
 			}
 			else
 			{
-				direction = optimal_direction;
+				direction = (Direction)optimal_direction;
 			}
 		}
 	}
@@ -283,7 +272,7 @@ void Ghost::move(unsigned char level, std::array<std::array<Cell, MAP_HEIGHT>, M
 		if (0 == frightened_speed_timer)
 		{
 			//The ghost can move after a certain number of frames.
-			move = 1;
+			move = true;
 
 			frightened_speed_timer = GHOST_FRIGHTENED_SPEED;
 
@@ -308,12 +297,12 @@ void Ghost::move(unsigned char level, std::array<std::array<Cell, MAP_HEIGHT>, M
 					random_direction = rand() % 4;
 				}
 
-				direction = random_direction;
+				direction = (Direction)random_direction;
 			}
 			else
 			{
 				//If there's no other way, it turns back.
-				direction = (2 + direction) % 4;
+				direction = (Direction)((2 + direction) % 4);
 			}
 		}
 		else
@@ -322,30 +311,35 @@ void Ghost::move(unsigned char level, std::array<std::array<Cell, MAP_HEIGHT>, M
 		}
 	}
 
-	//If the ghost can move, we move it.
 	if (move)
 	{
 		switch (direction)
 		{
-		case 0:
+		case Direction::Right:
 		{
-			position.x += speed;
+			if (map_collision(position.x + speed, position.y, map) == Cell::Tunnel) {
+				position.x += (speed / static_cast<float>(5));
+			}
+			else {
+				position.x += speed;
+			}
+			//(map_collision(position.x + speed, position.y, map) == Cell::Tunnel) ? position.x += (speed / static_cast<float>(5)) : position.x += speed;
 
 			break;
 		}
-		case 1:
+		case Direction::Up:
 		{
 			position.y -= speed;
 
 			break;
 		}
-		case 2:
+		case Direction::Left:
 		{
-			position.x -= speed;
+			(map_collision(position.x - speed, position.y, map) == Cell::Tunnel) ? position.x -= (speed / static_cast<float>(2)) : position.x -= speed;
 
 			break;
 		}
-		case 3:
+		case Direction::Down:
 		{
 			position.y += speed;
 		}
@@ -363,15 +357,15 @@ void Ghost::move(unsigned char level, std::array<std::array<Cell, MAP_HEIGHT>, M
 		}
 	}
 
-	if (pacman_collision(pacman.get_position()))
+	if (is_pacman_collision(pacman.get_position()))
 	{
 		if (!frightened_mode) //When the ghost is not frightened and collides with Pacman, we kill Pacman.
 		{
-			pacman.set_dead(1);
+			pacman.set_dead(true);
 		}
 		else //Otherwise, the ghost starts running towards the house.
 		{
-			is_can_use_door = 1;
+			is_can_use_door = true;
 
 			frightened_mode = 2;
 

@@ -139,6 +139,7 @@
     <ClCompile Include="Ghost.cpp" />
     <ClCompile Include="GhostManager.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="MapManager.cpp" />
     <ClCompile Include="MapCollision.cpp" />
     <ClCompile Include="Pacman.cpp" />
   </ItemGroup>
@@ -150,6 +151,7 @@
     <ClInclude Include="Ghost.h" />
     <ClInclude Include="GhostManager.h" />
     <ClInclude Include="Global.h" />
+    <ClInclude Include="MapManager.h" />
     <ClInclude Include="MapCollision.h" />
     <ClInclude Include="Pacman.h" />
     <ClInclude Include="resource.h" />

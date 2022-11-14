@@ -4,17 +4,13 @@
 #include <SFML/Graphics.hpp>
 
 #include "Global.h"
-#include "DrawText.h"
 #include "Pacman.h"
 #include "Ghost.h"
 #include "GhostManager.h"
-#include "ConvertSketch.h"
-#include "DrawMap.h"
-#include "MapCollision.h"
+#include "MapManager.h"
 
 int main()
 {
-	//Is the game won?
 	bool game_won = false;
 
 	//Used to make the game framerate-independent.
@@ -25,34 +21,6 @@ int main()
 	//Similar to lag, used to make the game framerate-independent.
 	std::chrono::time_point<std::chrono::steady_clock> previous_time;
 
-	//It's not exactly like the map from the original Pac-Man game, but it's close enough.
-	std::array<std::string, MAP_HEIGHT> map_sketch = {
-		" ################### ",
-		" #........#........# ",
-		" #o##.###.#.###.##o# ",
-		" #.................# ",
-		" #.##.#.#####.#.##.# ",
-		" #....#...#...#....# ",
-		" ####.### # ###.#### ",
-		"    #.#   0   #.#    ",
-		"#####.# ##=## #.#####",
-		"     .  #123#  .     ",
-		"#####.# ##### #.#####",
-		"    #.#       #.#    ",
-		" ####.# ##### #.#### ",
-		" #........#........# ",
-		" #.##.###.#.###.##.# ",
-		" #o.#.....P.....#.o# ",
-		" ##.#.#.#####.#.#.## ",
-		" #....#...#...#....# ",
-		" #.######.#.######.# ",
-		" #.................# ",
-		" ################### "
-	};
-
-	std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH> map{};
-
-	//SFML thing. Stores events, I think.
 	sf::Event event;
 
 	sf::RenderWindow window(sf::VideoMode(CELL_SIZE * MAP_WIDTH * SCREEN_RESIZE, (FONT_HEIGHT + CELL_SIZE * MAP_HEIGHT) * SCREEN_RESIZE), "Pac-Man", sf::Style::Close);
@@ -62,20 +30,22 @@ int main()
 	//Generating a random seed.
 	srand(static_cast<unsigned>(time(0)));
 
-	Pacman pacman;
+	MapManager mapManager{};
 
-	//Initial ghost positions.
-	std::array<Position, 4> ghost_home_positions;
+	std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH> map = mapManager.Get_map();
 
-	map = convert_sketch(map_sketch, ghost_home_positions, pacman);
 
-	GhostManager ghost_manager{ ghost_home_positions };
+	GhostManager ghostManager{ mapManager.Get_ghost_start_positions() };
 
-	ghost_manager.reset(level/*, ghost_home_positions*/);
+	ghostManager.reset(level);
 
-	pacman.reset();
+	Pacman pacman{ mapManager.Get_pacman_start_positions() };
+
+	unsigned int score = 0;
+
 	//Get the current time and store it in a variable.
 	previous_time = std::chrono::steady_clock::now();
+
 
 	while (window.isOpen())
 	{
@@ -115,12 +85,12 @@ int main()
 
 				pacman.move(level, map);
 
-				ghost_manager.move(level, map, pacman);
+				ghostManager.move_ghosts(level, map, pacman);
 
 				//We're checking every cell in the map.
-				for (const std::array<Cell, MAP_HEIGHT>& column : map)
+				for (const auto& column : map)
 				{
-					for (const Cell& cell : column)
+					for (const auto& cell : column)
 					{
 						if (Cell::Pellet == cell) //And if at least one of them has a pellet.
 						{
@@ -155,9 +125,9 @@ int main()
 					level++;
 				}
 
-				map = convert_sketch(map_sketch, ghost_home_positions, pacman);
+				map = mapManager.Get_map();
 
-				ghost_manager.reset(level/*, ghost_home_positions*/);
+				ghostManager.reset(level);
 
 				pacman.reset();
 			}
@@ -170,13 +140,14 @@ int main()
 				if (!game_won && !pacman.is_dead())
 				{
 					window.clear(sf::Color::Black);
-					draw_map(map, window);
 
-					ghost_manager.draw(GHOST_FLASH_START >= pacman.get_energizer_timer(), window);
+					mapManager.Draw_map(map, window);
 
-					draw_text(false, 0, CELL_SIZE * MAP_HEIGHT, "Level: " + std::to_string(1 + level), window);
+					ghostManager.draw(GHOST_FLASH_START >= pacman.get_energizer_timer(), window);
 
-					draw_text(false, MAP_WIDTH * 4, CELL_SIZE * MAP_HEIGHT, "Score: " + std::to_string(1 + level), window);
+					mapManager.Draw_text(false, 0, CELL_SIZE * MAP_HEIGHT, "Level: " + std::to_string(1 + level), window);
+
+					mapManager.Draw_text(false, MAP_WIDTH * 4, CELL_SIZE * MAP_HEIGHT, "Score: " + std::to_string(score), window);
 				}
 
 				pacman.draw(game_won, window);
@@ -185,11 +156,11 @@ int main()
 				{
 					if (game_won)
 					{
-						draw_text(true, 0, 0, "Next level!", window);
+						mapManager.Draw_text(true, 0, 0, "Next level!", window);
 					}
 					else
 					{
-						draw_text(true, 0, 0, "Game over", window);
+						mapManager.Draw_text(true, 0, 0, "Game over", window);
 					}
 				}
 

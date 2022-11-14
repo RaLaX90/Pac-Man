@@ -1,21 +1,12 @@
-#include <array>
-#include <cmath>
-#include <SFML/Graphics.hpp>
-
-#include "Global.h"
 #include "Pacman.h"
-#include "MapCollision.h"
 
-Pacman::Pacman() :
-	animation_over(false),
-	dead(false),
-	direction(0), 
-	animation_timer(0),
-	energizer_timer(0),
-	position({ 0, 0 })
+Pacman::Pacman(Position i_start_position) :
+	start_position(i_start_position)
 {
 	texture_dead.loadFromFile("Images/PacmanDeath" + std::to_string(CELL_SIZE) + ".png");
 	texture_alive.loadFromFile("Images/Pacman" + std::to_string(CELL_SIZE) + ".png");
+
+	reset();
 }
 
 bool Pacman::get_animation_over()
@@ -28,7 +19,7 @@ bool Pacman::is_dead()
 	return dead;
 }
 
-unsigned char Pacman::get_direction()
+Direction Pacman::get_direction()
 {
 	return direction;
 }
@@ -79,7 +70,7 @@ void Pacman::reset()
 	animation_over = false;
 	dead = false;
 
-	direction = 0;
+	direction = Direction::Right;
 
 	animation_timer = 0;
 	energizer_timer = 0;
@@ -103,7 +94,7 @@ void Pacman::set_dead(bool is_dead)
 	}
 }
 
-void Pacman::set_position(short x, short y)
+void Pacman::set_position(float x, float y)
 {
 	position = { x, y };
 }
@@ -113,77 +104,63 @@ void Pacman::move(unsigned char level, std::array<std::array<Cell, MAP_HEIGHT>, 
 	std::array<bool, 4> walls{};
 	walls[0] = is_map_collision(false, false, PACMAN_SPEED + position.x, position.y, map);
 	walls[1] = is_map_collision(false, false, position.x, position.y - PACMAN_SPEED, map);
+	auto lul = map_collision(position.x, position.y - PACMAN_SPEED, map);
 	walls[2] = is_map_collision(false, false, position.x - PACMAN_SPEED, position.y, map);
 	walls[3] = is_map_collision(false, false, position.x, PACMAN_SPEED + position.y, map);
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && direction != Direction::Right && !walls[0])
 	{
-		if (!walls[0]) //You can't turn in this direction if there's a wall there.
-		{
-			direction = 0;
-		}
+		direction = Direction::Right;
 	}
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && direction != Direction::Up && !walls[1])
 	{
-		if (!walls[1])
-		{
-			direction = 1;
-		}
+		direction = Direction::Up;
 	}
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && direction != Direction::Left && !walls[2])
 	{
-		if (!walls[2])
-		{
-			direction = 2;
-		}
+		direction = Direction::Left;
 	}
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && direction != Direction::Down && !walls[3])
 	{
-		if (!walls[3])
-		{
-			direction = 3;
-		}
+		direction = Direction::Down;
 	}
 
 	if (!walls[direction])
 	{
 		switch (direction)
 		{
-		case 0:
+		case Direction::Right:
 		{
 			position.x += PACMAN_SPEED;
 
 			break;
 		}
-		case 1:
+		case Direction::Up:
 		{
 			position.y -= PACMAN_SPEED;
 
 			break;
 		}
-		case 2:
+		case Direction::Left:
 		{
 			position.x -= PACMAN_SPEED;
 
 			break;
 		}
-		case 3:
+		case Direction::Down:
 		{
 			position.y += PACMAN_SPEED;
 		}
 		}
 	}
 
-	if (-CELL_SIZE >= position.x)
+	if (-CELL_SIZE >= position.x) // When pacman enters the tunnel on the right side...
 	{
-		position.x = CELL_SIZE * MAP_WIDTH - PACMAN_SPEED;
+		position.x = CELL_SIZE * MAP_WIDTH - PACMAN_SPEED; // he appears on the left side
 	}
-	else if (CELL_SIZE * MAP_WIDTH <= position.x)
+	else if (CELL_SIZE * MAP_WIDTH <= position.x) // When pacman enters the tunnel on the left side...
 	{
-		position.x = PACMAN_SPEED - CELL_SIZE;
+		position.x = PACMAN_SPEED - CELL_SIZE; // he appears on the right side
 	}
 
 	if (is_map_collision(true, false, position.x, position.y, map)) //When Pacman eats an energizer...

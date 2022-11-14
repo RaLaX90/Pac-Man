@@ -1,10 +1,6 @@
-#include <array>
-#include <cmath>
-
-#include "Global.h"
 #include "MapCollision.h"
 
-bool is_map_collision(bool is_collecting_pellets, bool is_using_door, short x, short y, std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& map)
+bool is_map_collision(bool is_collecting_pellets, bool is_using_door, float x, float y, std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& map)
 {
 	bool output = false;
 
@@ -79,4 +75,19 @@ bool is_map_collision(bool is_collecting_pellets, bool is_using_door, short x, s
 	}
 
 	return output;
+}
+
+Cell map_collision(float future_position_x, float future_position_y, std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& map)
+{
+	if (future_position_x < CELL_SIZE) {
+		return map[0][future_position_y / CELL_SIZE];
+	}
+	else if (future_position_x > CELL_SIZE) {
+		return map[MAP_WIDTH - 1][future_position_y / CELL_SIZE];
+	}
+	else if (future_position_y < future_position_y) {
+		return map[future_position_x / CELL_SIZE][0];
+	}
+
+	return map[future_position_x / CELL_SIZE][future_position_y / CELL_SIZE];
 }
