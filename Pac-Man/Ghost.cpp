@@ -1,8 +1,8 @@
 #include "Ghost.h"
 
-Ghost::Ghost(unsigned char i_id, const Position& start_position, const Position& exit_position) :
+Ghost::Ghost(unsigned char i_id, const Position& i_start_position, const Position& exit_position) :
 	id(i_id),
-	start_position(start_position),
+	Game_object(i_start_position),
 	door_position(exit_position)
 {
 	reset();
@@ -209,10 +209,10 @@ void Ghost::move(unsigned char level, std::array<std::array<Cell, MAP_WIDTH>, MA
 	update_target(pacman.get_direction(), ghost_0.get_position(), pacman.get_position());
 
 	std::array<bool, 4> walls{};
-	walls[0] = is_map_collision(0, is_can_use_door, speed + position.x, position.y, map);
-	walls[1] = is_map_collision(0, is_can_use_door, position.x, position.y - speed, map);
-	walls[2] = is_map_collision(0, is_can_use_door, position.x - speed, position.y, map);
-	walls[3] = is_map_collision(0, is_can_use_door, position.x, speed + position.y, map);
+	walls[0] = is_map_collision(speed + position.x, position.y, map);
+	walls[1] = is_map_collision(position.x, position.y - speed, map);
+	walls[2] = is_map_collision(position.x - speed, position.y, map);
+	walls[3] = is_map_collision(position.x, speed + position.y, map);
 
 	if (1 != frightened_mode)
 	{
@@ -335,7 +335,7 @@ void Ghost::move(unsigned char level, std::array<std::array<Cell, MAP_WIDTH>, MA
 		}
 		case Direction::Left:
 		{
-			(map_collision(position.x - speed, position.y, direction, map) == Cell::Tunnel) ? position.x -= (speed / static_cast<float>(2)) : position.x -= speed;
+			//(map_collision(position.x - speed, position.y, direction, map) == Cell::Tunnel) ? position.x -= (speed / static_cast<float>(2)) : position.x -= speed;
 
 			break;
 		}
@@ -384,7 +384,7 @@ void Ghost::update_target(unsigned char pacman_direction, const Position& ghost_
 			{
 				is_can_use_door = false; //It can no longer use the door.
 			}
-			else if (start_position == target_position) //If the ghost has reached its start_position.
+			else if (start_position == target_position) //If the ghost has reached its i_start_position.
 			{
 				frightened_mode = 0; //It stops being frightened.
 

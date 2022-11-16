@@ -136,6 +136,7 @@
     <ClCompile Include="DrawMap.cpp" />
     <ClCompile Include="DrawText.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Game_object.cpp" />
     <ClCompile Include="Ghost.cpp" />
     <ClCompile Include="GhostManager.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -148,6 +149,7 @@
     <ClInclude Include="DrawMap.h" />
     <ClInclude Include="DrawText.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="Game_object.h" />
     <ClInclude Include="Ghost.h" />
     <ClInclude Include="GhostManager.h" />
     <ClInclude Include="Global.h" />

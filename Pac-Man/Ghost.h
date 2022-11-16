@@ -7,15 +7,15 @@
 #include "Global.h"
 #include "Pacman.h"
 #include "MapCollision.h"
+#include "Game_object.h"
 
-class Ghost
+class Ghost : public Game_object
 {
 	//It can be the scatter mode or the chase mode.
 	bool fear_mode;
 
 	bool is_can_use_door;
 
-	Direction direction;
 	//0 - I'm not frightened
 	//1 - Okay, maybe I am
 	//2 - AAAAAAAH!!! I'M GOING TO MY HOUSE!
@@ -28,27 +28,21 @@ class Ghost
 	//3 - Orange
 	unsigned char id;
 
-	unsigned short animation_timer;
-
-	//The ghost will go here when escaping.
-	Position start_position;
 	//You can't stay in your house forever.
 	Position door_position;
-
-	Position position;
 
 	Position target_position;
 
 public:
-	Ghost(unsigned char i_id, const Position& start_position, const Position& exit_position);
-	~Ghost();
+	Ghost(unsigned char i_id, const Position& i_start_position, const Position& exit_position);
+	virtual ~Ghost();
 
 	bool is_pacman_collision(const Position& pacman_position);
 
 	float get_target_distance(unsigned char direction);
 
 	void draw(bool flash, sf::RenderWindow& window);
-	void reset(/*const Position& start_position, const Position& exit_position*/);
+	void reset();
 	void set_position(float x, float y);
 	void switch_mode();
 	void move(unsigned char level, std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT>& map, Ghost& ghost_0, Pacman& pacman);
