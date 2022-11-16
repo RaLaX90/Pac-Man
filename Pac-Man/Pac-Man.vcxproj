@@ -155,6 +155,7 @@
     <ClInclude Include="Global.h" />
     <ClInclude Include="MapManager.h" />
     <ClInclude Include="MapCollision.h" />
+    <ClInclude Include="Maps.h" />
     <ClInclude Include="Pacman.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>

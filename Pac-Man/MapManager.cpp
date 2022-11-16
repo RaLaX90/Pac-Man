@@ -6,7 +6,7 @@ void MapManager::convert_sketch() {
 	{
 		for (unsigned char b = 0; b < MAP_HEIGHT; b++)
 		{
-			switch (map_sketch[a][b])
+			switch (map_sketch_level_1[a][b])
 			{
 			case '#':
 			{
@@ -49,28 +49,28 @@ void MapManager::convert_sketch() {
 }
 
 MapManager::MapManager() {
-	map_sketch = {
-		" ################### ",
-		" #........#........# ",
-		" #o##.###.#.###.##o# ",
-		" #.................# ",
-		" #.##.#.#####.#.##.# ",
-		" #....#...#...#....# ",
-		" ####.### # ###.#### ",
+	map_sketch_level_1 = {
+		"#####################",
+		"#.........#.........#",
+		"#o###.###.#.###.###o#",
+		"#...................#",
+		"#.###.#.#####.#.###.#",
+		"#.....#...#...#.....#",
+		"#####.### # ###.#####",
 		"    #.#   0   #.#    ",
 		"#####.# ##=## #.#####",
 		"TTTTT.  #123#  .TTTTT",
 		"#####.# ##### #.#####",
 		"    #.#       #.#    ",
-		" ####.# ##### #.#### ",
-		" #........#........# ",
-		" #.##.###.#.###.##.# ",
-		" #o.#.....P.....#.o# ",
-		" ##.#.#.#####.#.#.## ",
-		" #....#...#...#....# ",
-		" #.######.#.######.# ",
-		" #.................# ",
-		" ################### "
+		"#####.# ##### #.#####",
+		"#.........#.........#",
+		"#.###.###.#.###.###.#",
+		"#o.##.....P.....##.o#",
+		"##.##.#.#####.#.##.##",
+		"#.....#...#...#.....#",
+		"#.#######.#.#######.#",
+		"#...................#",
+		"#####################"
 	};
 
 	convert_sketch();
@@ -233,7 +233,7 @@ unsigned int MapManager::Get_pellets_count()
 {
 	unsigned int pellets_count = 0;
 
-	for (const auto& column : map_sketch)
+	for (const auto& column : map_sketch_level_1)
 	{
 		for (const auto& symbol : column)
 		{
@@ -263,7 +263,7 @@ std::array<Position, 4> MapManager::Get_ghost_start_positions()
 	{
 		for (unsigned char b = 0; b < MAP_WIDTH; b++)
 		{
-			switch (map_sketch[a][b])
+			switch (map_sketch_level_1[a][b])
 			{
 				//Red ghost
 			case '0':
@@ -315,7 +315,7 @@ Position MapManager::Get_pacman_start_positions()
 	{
 		for (unsigned char b = 0; b < MAP_WIDTH; b++)
 		{
-			switch (map_sketch[a][b])
+			switch (map_sketch_level_1[a][b])
 			{
 			case 'P':
 			{

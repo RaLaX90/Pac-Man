@@ -86,6 +86,9 @@
     <ClInclude Include="Game_object.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Maps.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Pac-Man.rc">

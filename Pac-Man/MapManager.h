@@ -7,7 +7,7 @@
 
 class MapManager
 {
-	std::array<std::string, MAP_HEIGHT> map_sketch;
+	std::array<std::string, MAP_HEIGHT> map_sketch_level_1;
 
 	std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT> map;
 

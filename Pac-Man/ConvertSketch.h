@@ -7,4 +7,4 @@
 //#include "Global.h"
 //#include "Pacman.h"
 //
-//std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT> convert_sketch(const std::array<std::string, MAP_HEIGHT>& map_sketch, std::array<Position, 4>& ghost_positions, Pacman& pacman);
+//std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT> convert_sketch(const std::array<std::string, MAP_HEIGHT>& map_sketch_level_1, std::array<Position, 4>& ghost_positions, Pacman& pacman);
