@@ -178,7 +178,7 @@ void Ghost::switch_mode()
 	fear_mode = !fear_mode;
 }
 
-void Ghost::move(unsigned char level, std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& map, Ghost& ghost_0, Pacman& pacman)
+void Ghost::move(unsigned char level, std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT>& map, Ghost& ghost_0, Pacman& pacman)
 {
 	//Can the ghost move?
 	bool move = false;
@@ -317,12 +317,12 @@ void Ghost::move(unsigned char level, std::array<std::array<Cell, MAP_HEIGHT>, M
 		{
 		case Direction::Right:
 		{
-			if (map_collision(position.x + speed, position.y, map) == Cell::Tunnel) {
-				position.x += (speed / static_cast<float>(5));
-			}
-			else {
+			//if (map_collision(position.x + speed, position.y, map) == Cell::Tunnel) {
+			//	position.x += (speed / static_cast<float>(5));
+			//}
+			//else {
 				position.x += speed;
-			}
+			//}
 			//(map_collision(position.x + speed, position.y, map) == Cell::Tunnel) ? position.x += (speed / static_cast<float>(5)) : position.x += speed;
 
 			break;
@@ -335,7 +335,7 @@ void Ghost::move(unsigned char level, std::array<std::array<Cell, MAP_HEIGHT>, M
 		}
 		case Direction::Left:
 		{
-			(map_collision(position.x - speed, position.y, map) == Cell::Tunnel) ? position.x -= (speed / static_cast<float>(2)) : position.x -= speed;
+			(map_collision(position.x - speed, position.y, direction, map) == Cell::Tunnel) ? position.x -= (speed / static_cast<float>(2)) : position.x -= speed;
 
 			break;
 		}

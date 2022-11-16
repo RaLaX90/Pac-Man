@@ -32,12 +32,12 @@ int main()
 
 	MapManager mapManager{};
 
-	std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH> map = mapManager.Get_map();
+	std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT> map = mapManager.Get_map();
 
 
-	GhostManager ghostManager{ mapManager.Get_ghost_start_positions() };
+	//GhostManager ghostManager{ mapManager.Get_ghost_start_positions() };
 
-	ghostManager.reset(level);
+	//ghostManager.reset(level);
 
 	Pacman pacman{ mapManager.Get_pacman_start_positions() };
 
@@ -76,7 +76,8 @@ int main()
 
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
 				//Making sure the player can close the window.
-				window.close();
+				pacman.set_dead(true);
+				//window.close();
 			}
 
 			if (!game_won && !pacman.is_dead())
@@ -85,7 +86,7 @@ int main()
 
 				pacman.move(level, map);
 
-				ghostManager.move_ghosts(level, map, pacman);
+				//ghostManager.move_ghosts(level, map, pacman);
 
 				//We're checking every cell in the map.
 				for (const auto& column : map)
@@ -127,7 +128,7 @@ int main()
 
 				map = mapManager.Get_map();
 
-				ghostManager.reset(level);
+				//ghostManager.reset(level);
 
 				pacman.reset();
 			}
@@ -143,7 +144,7 @@ int main()
 
 					mapManager.Draw_map(map, window);
 
-					ghostManager.draw(GHOST_FLASH_START >= pacman.get_energizer_timer(), window);
+					//ghostManager.draw(GHOST_FLASH_START >= pacman.get_energizer_timer(), window);
 
 					mapManager.Draw_text(false, 0, CELL_SIZE * MAP_HEIGHT, "Level: " + std::to_string(1 + level), window);
 

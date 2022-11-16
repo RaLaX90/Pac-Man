@@ -2,44 +2,44 @@
 
 void MapManager::convert_sketch() {
 
-	for (unsigned char a = 0; a < MAP_HEIGHT; a++)
+	for (unsigned char a = 0; a < MAP_WIDTH; a++)
 	{
-		for (unsigned char b = 0; b < MAP_WIDTH; b++)
+		for (unsigned char b = 0; b < MAP_HEIGHT; b++)
 		{
 			switch (map_sketch[a][b])
 			{
 			case '#':
 			{
-				map[b][a] = Cell::Wall;
+				map[a][b] = Cell::Wall;
 
 				break;
 			}
 			case '=':
 			{
-				map[b][a] = Cell::Door;
+				map[a][b] = Cell::Door;
 
 				break;
 			}
 			case '.':
 			{
-				map[b][a] = Cell::Pellet;
+				map[a][b] = Cell::Pellet;
 
 				break;
 			}
 			case 'o':
 			{
-				map[b][a] = Cell::Energizer;
+				map[a][b] = Cell::Energizer;
 
 				break;
 			}
 			case 'T':
 			{
-				map[b][a] = Cell::Tunnel;
+				map[a][b] = Cell::Tunnel;
 
 				break;
 			}
 			default: {
-				map[b][a] = Cell::Empty;
+				map[a][b] = Cell::Empty;
 
 				break;
 			}
@@ -82,21 +82,21 @@ MapManager::~MapManager()
 {
 }
 
-std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH> MapManager::Get_map()
+std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT> MapManager::Get_map()
 {
 	return map;
 }
 
-void MapManager::Draw_map(const std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& map, sf::RenderWindow& window)
+void MapManager::Draw_map(const std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT>& map, sf::RenderWindow& window)
 {
 	sf::Sprite sprite;
 	sprite.setTexture(texture);
 
-	for (unsigned char a = 0; a < MAP_WIDTH; a++)
+	for (unsigned char a = 0; a < MAP_HEIGHT; a++)
 	{
-		for (unsigned char b = 0; b < MAP_HEIGHT; b++)
+		for (unsigned char b = 0; b < MAP_WIDTH; b++)
 		{
-			sprite.setPosition(static_cast<float>(CELL_SIZE * a), static_cast<float>(CELL_SIZE * b));
+			sprite.setPosition(CELL_SIZE * b, CELL_SIZE * a); // it is necessary
 
 			//We just crop out what we need from the texture.
 			switch (map[a][b])
@@ -132,45 +132,28 @@ void MapManager::Draw_map(const std::array<std::array<Cell, MAP_HEIGHT>, MAP_WID
 				unsigned char right = 0;
 				unsigned char up = 0;
 
-				if (b < MAP_HEIGHT - 1)
-				{
-					if (Cell::Wall == map[a][1 + b])
-					{
-						down = 1;
-					}
-				}
-
-				//Since we have warp tunnels, we need to draw them as if they're connected.
-				if (0 < a)
-				{
-					if (Cell::Wall == map[a - 1][b])
-					{
-						left = 1;
-					}
-				}
-				else
+				if ((b > 0 && map[a][b - 1] == Cell::Wall) ||  //If previous cell is wall, than note it 
+					(b == 0 && ((a > 0 && map[a - 1][b] == Cell::Tunnel) ||  //Or if in left side of map and cell below is tunnel, than draw an unfinished wall 
+								(a < MAP_HEIGHT - 1 && map[a + 1][b] == Cell::Tunnel)))) //(since the cell above and below is a tunnel that leads to the other side of the map)
 				{
 					left = 1;
 				}
 
-				if (a < MAP_WIDTH - 1)
-				{
-					if (Cell::Wall == map[1 + a][b])
-					{
-						right = 1;
-					}
-				}
-				else
+				if (((b < MAP_WIDTH - 1) && map[a][b + 1] == Cell::Wall) || //If next cell is wall, than note it 
+					(b == MAP_WIDTH - 1 && ((a > 0 && map[a - 1][b] == Cell::Tunnel) || // The same history with tunnel wals in right side
+										(a < MAP_HEIGHT - 1 && map[a + 1][b] == Cell::Tunnel))))
 				{
 					right = 1;
 				}
 
-				if (0 < b)
+				if (a > 0 && map[a - 1][b] == Cell::Wall) //If cell above is wall, than note it 
 				{
-					if (Cell::Wall == map[a][b - 1])
-					{
-						up = 1;
-					}
+					up = 1;
+				}
+
+				if ((a < MAP_HEIGHT - 1) && map[a + 1][b] == Cell::Wall) //If cell below is wall, than note it
+				{
+					down = 1;
 				}
 
 				//--------------------------------------------<         DISTRIBUTIVE PROPERTY!         >----------------------------
@@ -180,7 +163,14 @@ void MapManager::Draw_map(const std::array<std::array<Cell, MAP_HEIGHT>, MAP_WID
 
 				break;
 			}
-			default: {
+			case Cell::Tunnel:
+			{
+
+				break;
+			}
+			default:
+			{
+
 				break;
 			}
 			}
@@ -341,5 +331,5 @@ Position MapManager::Get_pacman_start_positions()
 		}
 	}
 
-	return pacman_start_position;
+	return pacman_start_position; //If pacman start position is not be founded - return object with 0
 }

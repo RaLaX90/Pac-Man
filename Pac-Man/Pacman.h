@@ -41,7 +41,7 @@ public:
 	void set_animation_timer(unsigned short i_animation_timer);
 	void set_dead(bool is_dead);
 	void set_position(float x, float y);
-	void move(unsigned char level, std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& map);
+	void move(unsigned char level, std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT>& map);
 
 	void set_start_position(const Position& i_start_position);
 	Position get_position();

@@ -51,7 +51,7 @@ public:
 	void reset(/*const Position& start_position, const Position& exit_position*/);
 	void set_position(float x, float y);
 	void switch_mode();
-	void move(unsigned char level, std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& map, Ghost& ghost_0, Pacman& pacman);
+	void move(unsigned char level, std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT>& map, Ghost& ghost_0, Pacman& pacman);
 	void update_target(unsigned char pacman_direction, const Position& ghost_0_position, const Position& pacman_position);
 
 	Position get_position();

@@ -99,59 +99,107 @@ void Pacman::set_position(float x, float y)
 	position = { x, y };
 }
 
-void Pacman::move(unsigned char level, std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& map)
+void Pacman::move(unsigned char level, std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT>& map)
 {
-	std::array<bool, 4> walls{};
-	walls[0] = is_map_collision(false, false, PACMAN_SPEED + position.x, position.y, map);
-	walls[1] = is_map_collision(false, false, position.x, position.y - PACMAN_SPEED, map);
-	auto lul = map_collision(position.x, position.y - PACMAN_SPEED, map);
-	walls[2] = is_map_collision(false, false, position.x - PACMAN_SPEED, position.y, map);
-	walls[3] = is_map_collision(false, false, position.x, PACMAN_SPEED + position.y, map);
+	auto debug1 = position.x / CELL_SIZE;
+	auto debug2 = (PACMAN_SPEED + position.x) / CELL_SIZE;
+	auto debug3 = position.y / CELL_SIZE;
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && direction != Direction::Right && !walls[0])
+	//std::array<bool, 4> walls{ };
+	/*map[debug3][debug2] = Cell::Energizer;*/
+	//auto debug = map_collision(PACMAN_SPEED + position.x, position.y, map) == Cell::Wall;
+	
+	//cells_around[0] = map_collision(PACMAN_SPEED + position.x, position.y, direction, map) == Cell::Wall;
+	//cells_around[1] = map_collision(position.x, position.y - PACMAN_SPEED, direction, map) == Cell::Wall;
+	//cells_around[2] = map_collision(position.x - PACMAN_SPEED, position.y, direction, map) == Cell::Wall;
+	//cells_around[3] = map_collision(position.x, PACMAN_SPEED + position.y, direction, map) == Cell::Wall;	
+	
+	std::array<bool, 4> cells_around{ };	
+																				
+																				
+																				
+	cells_around[0] = map_collision2(PACMAN_SPEED + position.x, position.y, map);//0 - top left
+	cells_around[1] = map_collision2(position.x, position.y - PACMAN_SPEED, map);//1 - top right
+	cells_around[2] = map_collision2(position.x - PACMAN_SPEED, position.y, map);//2 - bottom left
+	cells_around[3] = map_collision2(position.x, PACMAN_SPEED + position.y, map);//3 - bottom right
+
+	//walls[0] = is_map_collision(false, false, PACMAN_SPEED + position.x, position.y, map);
+	//walls[1] = is_map_collision(false, false, position.x, position.y - PACMAN_SPEED, map);
+	//walls[2] = is_map_collision(false, false, position.x - PACMAN_SPEED, position.y, map);
+	//walls[3] = is_map_collision(false, false, position.x, PACMAN_SPEED + position.y, map);
+
+
+	auto qwe = is_in_cell_center(position.x, position.y);
+	auto wer = !cells_around[Direction::Up];
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && direction != Direction::Right /*&& !walls[direction]*/ /*&& is_in_cell_center(position.x, position.y)*/ && !cells_around[Direction::Right] /*&& cells_around[1] != Cell::Wall && cells_around[1] != Cell::Door && cells_around[3] != Cell::Wall && cells_around[3] != Cell::Door*/)
 	{
 		direction = Direction::Right;
 	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && direction != Direction::Up && !walls[1])
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && direction != Direction::Up /*&& !walls[direction]*/ /*&& is_in_cell_center(position.x, position.y)*/ && !cells_around[Direction::Up] /*&& cells_around[0] != Cell::Wall && cells_around[0] != Cell::Door && cells_around[1] != Cell::Wall && cells_around[1] != Cell::Door*/)
 	{
 		direction = Direction::Up;
 	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && direction != Direction::Left && !walls[2])
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && direction != Direction::Left /*&& !walls[direction]*/ /*&& is_in_cell_center(position.x, position.y)*/ && !cells_around[Direction::Left] /*&& cells_around[0] != Cell::Wall && cells_around[0] != Cell::Door && cells_around[2] != Cell::Wall && cells_around[2] != Cell::Door*/)
 	{
 		direction = Direction::Left;
 	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && direction != Direction::Down && !walls[3])
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && direction != Direction::Down /*&& !walls[direction]*/ /*&& is_in_cell_center(position.x, position.y)*/ && !cells_around[Direction::Down] /*&& cells_around[2] != Cell::Wall && cells_around[2] != Cell::Door && cells_around[3] != Cell::Wall && cells_around[3] != Cell::Door*/)
 	{
 		direction = Direction::Down;
 	}
 
-	if (!walls[direction])
+	//if (!walls[direction])
+	if (!cells_around[direction])
 	{
 		switch (direction)
 		{
 		case Direction::Right:
 		{
-			position.x += PACMAN_SPEED;
+			//if (cells_around[1] != Cell::Wall && cells_around[1] != Cell::Door && cells_around[3] != Cell::Wall && cells_around[3] != Cell::Door) 
+			//{
+				position.x += PACMAN_SPEED;
+			//}
+			//else {
+			//	auto qwe = 0;
+			//}
 
 			break;
 		}
 		case Direction::Up:
 		{
-			position.y -= PACMAN_SPEED;
+			//if (cells_around[0] != Cell::Wall && cells_around[0] != Cell::Door && cells_around[1] != Cell::Wall && cells_around[1] != Cell::Door)
+			//{
+				position.y -= PACMAN_SPEED;
+			//}
 
 			break;
 		}
 		case Direction::Left:
 		{
-			position.x -= PACMAN_SPEED;
+			//if (cells_around[0] != Cell::Wall && cells_around[0] != Cell::Door && cells_around[2] != Cell::Wall && cells_around[2] != Cell::Door)
+			//{
+				position.x -= PACMAN_SPEED;
+			//}
 
 			break;
 		}
 		case Direction::Down:
 		{
-			position.y += PACMAN_SPEED;
+			//if (cells_around[2] != Cell::Wall && cells_around[2] != Cell::Door && cells_around[3] != Cell::Wall && cells_around[3] != Cell::Door)
+			//{
+				position.y += PACMAN_SPEED;
+			//}
+
+			break;
+		}
+		default: {
+			break;
 		}
 		}
+	}
+	else {
+		auto qwe = 0;
 	}
 
 	if (-CELL_SIZE >= position.x) // When pacman enters the tunnel on the right side...
@@ -163,15 +211,16 @@ void Pacman::move(unsigned char level, std::array<std::array<Cell, MAP_HEIGHT>, 
 		position.x = PACMAN_SPEED - CELL_SIZE; // he appears on the right side
 	}
 
-	if (is_map_collision(true, false, position.x, position.y, map)) //When Pacman eats an energizer...
-	{
-		//He becomes energized!
-		energizer_timer = static_cast<unsigned short>(ENERGIZER_DURATION / pow(2, level));
-	}
-	else
-	{
+	//if (map_collision(position.x, position.y, map) == Cell::Energizer/*is_map_collision(true, false, position.x, position.y, map)*/) //When Pacman eats an energizer...
+	//{
+	//	//He becomes energized!
+	//	energizer_timer = static_cast<unsigned short>(ENERGIZER_DURATION / pow(2, level));
+	//}
+	//else
+	//{
 		energizer_timer = std::max(0, energizer_timer - 1);
-	}
+	//}
+
 }
 
 void Pacman::set_start_position(const Position& i_start_position)

@@ -36,7 +36,7 @@ void GhostManager::reset(unsigned char level)
 	}
 }
 
-void GhostManager::move_ghosts(unsigned char level, std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& map, Pacman& pacman)
+void GhostManager::move_ghosts(unsigned char level, std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT>& map, Pacman& pacman)
 {
 	if (!pacman.get_energizer_timer()) //We won't move the wave timer when Pacman is energized.
 	{

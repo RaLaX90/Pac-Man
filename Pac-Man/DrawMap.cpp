@@ -1,6 +1,6 @@
 //#include "DrawMap.h"
 //
-//void draw_map(const std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& map, sf::RenderWindow& window)
+//void draw_map(const std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT>& map, sf::RenderWindow& window)
 //{
 //	sf::Sprite sprite;
 //

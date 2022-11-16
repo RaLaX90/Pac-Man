@@ -1,8 +1,8 @@
 //#include "ConvertSketch.h"
 //
-//std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH> convert_sketch(const std::array<std::string, MAP_HEIGHT>& map_sketch, std::array<Position, 4>& ghost_positions, Pacman& pacman)
+//std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT> convert_sketch(const std::array<std::string, MAP_HEIGHT>& map_sketch, std::array<Position, 4>& ghost_positions, Pacman& pacman)
 //{
-//	std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH> output_map{};
+//	std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT> output_map{};
 //
 //	for (unsigned char a = 0; a < MAP_HEIGHT; a++)
 //	{
