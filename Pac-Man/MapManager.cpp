@@ -2,9 +2,9 @@
 
 void MapManager::convert_sketch() {
 
-	for (unsigned char a = 0; a < MAP_WIDTH; a++)
+	for (unsigned char a = 0; a < MAP_HEIGHT; a++)
 	{
-		for (unsigned char b = 0; b < MAP_HEIGHT; b++)
+		for (unsigned char b = 0; b < MAP_WIDTH; b++)
 		{
 			switch (map_sketch_level_1[a][b])
 			{
@@ -82,9 +82,14 @@ MapManager::~MapManager()
 {
 }
 
-std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT> MapManager::Get_map()
+std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT>& MapManager::Get_map()
 {
 	return map;
+}
+
+void MapManager::reset()
+{
+	convert_sketch();
 }
 
 void MapManager::Draw_map(const std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT>& map, sf::RenderWindow& window)
@@ -233,13 +238,13 @@ unsigned int MapManager::Get_pellets_count()
 {
 	unsigned int pellets_count = 0;
 
-	for (const auto& column : map_sketch_level_1)
+	for (const auto& column : map)
 	{
-		for (const auto& symbol : column)
+		for (const auto& cell : column)
 		{
-			switch (symbol)
+			switch (cell)
 			{
-			case '.':
+			case Cell::Pellet:
 			{
 				pellets_count++;
 

@@ -19,7 +19,9 @@ public:
 	MapManager();
 	~MapManager();
 
-	std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT> Get_map();
+	std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT>& Get_map();
+
+	void reset();
 
 	unsigned int Get_pellets_count();
 	std::array<Position, 4> Get_ghost_start_positions();

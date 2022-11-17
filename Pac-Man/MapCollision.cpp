@@ -1,6 +1,6 @@
 #include "MapCollision.h"
 
-bool is_map_collision(float future_position_x, float future_position_y, std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT>& map)
+bool is_wall_and_door_collision(float future_position_x, float future_position_y, std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT>& map)
 {
 	float cell_x = future_position_x / static_cast<float>(CELL_SIZE);
 	float cell_y = future_position_y / static_cast<float>(CELL_SIZE);
@@ -63,4 +63,17 @@ bool is_in_cell_center(float position_x, float position_y) {
 	bool is_integer_cell_y = cell_y == (int)abs(cell_y);
 
 	return is_integer_cell_y && is_integer_cell_x;
+}
+
+bool is_collision(Position first_object_position, Position second_object_position)
+{
+	if (first_object_position.x > second_object_position.x - CELL_SIZE && first_object_position.x < CELL_SIZE + second_object_position.x)
+	{
+		if (first_object_position.y > second_object_position.y - CELL_SIZE && first_object_position.y < CELL_SIZE + second_object_position.y)
+		{
+			return true;
+		}
+	}
+
+	return false;
 }

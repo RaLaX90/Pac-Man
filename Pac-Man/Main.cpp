@@ -11,7 +11,7 @@
 
 int main()
 {
-	bool game_won = false;
+	Game_mode game_result = Game_mode::Continue;
 
 	//Used to make the game framerate-independent.
 	unsigned lag = 0;
@@ -32,20 +32,16 @@ int main()
 
 	MapManager mapManager{};
 
-	std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT> map = mapManager.Get_map();
-
-
-	//GhostManager ghostManager{ mapManager.Get_ghost_start_positions() };
-
-	//ghostManager.reset(level);
+	//std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT> map = mapManager.Get_map();
 
 	Pacman pacman{ mapManager.Get_pacman_start_positions() };
+
+	GhostManager ghostManager{ mapManager.Get_ghost_start_positions() };
 
 	unsigned int score = 0;
 
 	//Get the current time and store it in a variable.
 	previous_time = std::chrono::steady_clock::now();
-
 
 	while (window.isOpen())
 	{
@@ -76,47 +72,37 @@ int main()
 
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
 				//Making sure the player can close the window.
-				pacman.set_dead(true);
+				game_result = Game_mode::Pacman_dead;
 				//window.close();
 			}
 
-			if (!game_won && !pacman.is_dead())
+			if (game_result == Game_mode::Continue)
 			{
-				game_won = true;
+				pacman.move(level, mapManager.Get_map());
 
-				pacman.move(level, map);
+				ghostManager.move_ghosts(level, mapManager.Get_map(), pacman);
 
-				//ghostManager.move_ghosts(level, map, pacman);
+				for (Ghost& ghost : ghostManager.get_ghosts()) {
+					if (!ghost.is_frightened() && is_collision(pacman.get_position(), ghost.get_position())) {
+						game_result = Game_mode::Pacman_dead;
 
-				//We're checking every cell in the map.
-				for (const auto& column : map)
-				{
-					for (const auto& cell : column)
-					{
-						if (Cell::Pellet == cell) //And if at least one of them has a pellet.
-						{
-							game_won = false; //The game is not yet won.
-
-							break;
-						}
-					}
-
-					if (!game_won)
-					{
 						break;
 					}
 				}
 
-				if (game_won)
-				{
-					pacman.set_animation_timer(0);
+				//We're checking every cell in the map.
+				if (mapManager.Get_pellets_count() == 0) { //TODO (make it more optimized)
+					game_result = Game_mode::All_pellets_collected;
 				}
+
+				//if (game_result == Game_mode::All_pellets_collected) // TODO (useless i think:))
+				//{
+				//	pacman.set_animation_timer(0);
+				//}
 			}
 			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) //Restarting the game.
 			{
-				game_won = false;
-
-				if (pacman.is_dead())
+				if (game_result == Game_mode::Pacman_dead)
 				{
 					level = 0;
 				}
@@ -126,47 +112,45 @@ int main()
 					level++;
 				}
 
-				map = mapManager.Get_map();
+				game_result = Game_mode::Continue;
 
-				//ghostManager.reset(level);
+				mapManager.reset();
+
+				ghostManager.reset(level);
 
 				pacman.reset();
 			}
 
-			//I don't think anything needs to be explained here.
 			if (FRAME_DURATION > lag)
 			{
-				window.clear();
+				window.clear(sf::Color::Black);
 
-				if (!game_won && !pacman.is_dead())
+				pacman.draw(game_result, window);
+
+				if (game_result == Game_mode::Continue)
 				{
-					window.clear(sf::Color::Black);
+					mapManager.Draw_map(mapManager.Get_map(), window);
 
-					mapManager.Draw_map(map, window);
-
-					//ghostManager.draw(GHOST_FLASH_START >= pacman.get_energizer_timer(), window);
+					ghostManager.draw(GHOST_FLASH_START >= pacman.get_energizer_timer(), window);
 
 					mapManager.Draw_text(false, 0, CELL_SIZE * MAP_HEIGHT, "Level: " + std::to_string(1 + level), window);
 
 					mapManager.Draw_text(false, MAP_WIDTH * 4, CELL_SIZE * MAP_HEIGHT, "Score: " + std::to_string(score), window);
 				}
 
-				pacman.draw(game_won, window);
-
 				if (pacman.get_animation_over())
 				{
-					if (game_won)
+					if (game_result == Game_mode::All_pellets_collected)
 					{
 						mapManager.Draw_text(true, 0, 0, "Next level!", window);
 					}
-					else
+					else if (game_result == Game_mode::Pacman_dead)
 					{
 						mapManager.Draw_text(true, 0, 0, "Game over", window);
 					}
 				}
 
 				window.display();
-
 			}
 		}
 	}

@@ -8,7 +8,7 @@ GhostManager::GhostManager(const std::array<Position, 4>& ghost_positions) :
 		Ghost(2, {ghost_positions[2].x, ghost_positions[2].y}, {ghost_positions[0].x, ghost_positions[0].y}),
 		Ghost(3, {ghost_positions[3].x, ghost_positions[3].y}, {ghost_positions[0].x, ghost_positions[0].y}) })
 {
-
+	reset(0);
 }
 
 GhostManager::~GhostManager()
@@ -76,4 +76,9 @@ void GhostManager::move_ghosts(unsigned char level, std::array<std::array<Cell, 
 	{
 		ghost.move(level, map, ghosts[0], pacman);
 	}
+}
+
+std::array<Ghost, 4>& GhostManager::get_ghosts()
+{
+	return ghosts;
 }

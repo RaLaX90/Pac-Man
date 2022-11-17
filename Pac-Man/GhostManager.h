@@ -25,4 +25,6 @@ public:
 	void draw(bool flash, sf::RenderWindow& window);
 	void reset(unsigned char level);
 	void move_ghosts(unsigned char level, std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT>& map, Pacman& pacman);
+
+	std::array<Ghost, 4>& get_ghosts();
 };

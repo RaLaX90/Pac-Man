@@ -37,7 +37,7 @@ public:
 	Ghost(unsigned char i_id, const Position& i_start_position, const Position& exit_position);
 	virtual ~Ghost();
 
-	bool is_pacman_collision(const Position& pacman_position);
+	//bool is_pacman_collision(const Position& pacman_position);
 
 	float get_target_distance(unsigned char direction);
 
@@ -48,5 +48,6 @@ public:
 	void move(unsigned char level, std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT>& map, Ghost& ghost_0, Pacman& pacman);
 	void update_target(unsigned char pacman_direction, const Position& ghost_0_position, const Position& pacman_position);
 
+	bool is_frightened();
 	Position get_position();
 };

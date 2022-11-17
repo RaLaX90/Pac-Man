@@ -67,3 +67,9 @@ struct Position
 		return this->x == another_ghost_position.x && this->y == another_ghost_position.y;
 	}
 };
+
+enum Game_mode {
+	Continue = 0,
+	All_pellets_collected,
+	Pacman_dead
+};

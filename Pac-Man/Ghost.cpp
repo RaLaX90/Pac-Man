@@ -2,7 +2,7 @@
 
 Ghost::Ghost(unsigned char i_id, const Position& i_start_position, const Position& exit_position) :
 	id(i_id),
-	Game_object(i_start_position),
+	Game_object(i_start_position, GHOST_SPEED),
 	door_position(exit_position)
 {
 	reset();
@@ -12,19 +12,19 @@ Ghost::~Ghost()
 {
 }
 
-bool Ghost::is_pacman_collision(const Position& pacman_position)
-{
-	//I used the ADVANCED collision checking algorithm.
-	if (position.x > pacman_position.x - CELL_SIZE && position.x < CELL_SIZE + pacman_position.x)
-	{
-		if (position.y > pacman_position.y - CELL_SIZE && position.y < CELL_SIZE + pacman_position.y)
-		{
-			return true;
-		}
-	}
-
-	return false;
-}
+//bool Ghost::is_pacman_collision(const Position& pacman_position)
+//{
+//	//I used the ADVANCED collision checking algorithm.
+//	if (position.x > pacman_position.x - CELL_SIZE && position.x < CELL_SIZE + pacman_position.x)
+//	{
+//		if (position.y > pacman_position.y - CELL_SIZE && position.y < CELL_SIZE + pacman_position.y)
+//		{
+//			return true;
+//		}
+//	}
+//
+//	return false;
+//}
 
 float Ghost::get_target_distance(unsigned char direction)
 {
@@ -36,25 +36,25 @@ float Ghost::get_target_distance(unsigned char direction)
 	{
 	case 0:
 	{
-		x += GHOST_SPEED;
+		x += speed;
 
 		break;
 	}
 	case 1:
 	{
-		y -= GHOST_SPEED;
+		y -= speed;
 
 		break;
 	}
 	case 2:
 	{
-		x -= GHOST_SPEED;
+		x -= speed;
 
 		break;
 	}
 	case 3:
 	{
-		y += GHOST_SPEED;
+		y += speed;
 	}
 	}
 
@@ -186,7 +186,6 @@ void Ghost::move(unsigned char level, std::array<std::array<Cell, MAP_WIDTH>, MA
 	//If this is greater than 1, that means that the ghost has reached the intersection.
 	//We don't consider the way back as an available way.
 	unsigned char available_ways = 0;
-	float speed = GHOST_SPEED;
 
 	//Here the ghost starts and stops being frightened.
 	if (0 == frightened_mode && pacman.get_energizer_timer() == ENERGIZER_DURATION / pow(2, level))
@@ -209,10 +208,10 @@ void Ghost::move(unsigned char level, std::array<std::array<Cell, MAP_WIDTH>, MA
 	update_target(pacman.get_direction(), ghost_0.get_position(), pacman.get_position());
 
 	std::array<bool, 4> walls{};
-	walls[0] = is_map_collision(speed + position.x, position.y, map);
-	walls[1] = is_map_collision(position.x, position.y - speed, map);
-	walls[2] = is_map_collision(position.x - speed, position.y, map);
-	walls[3] = is_map_collision(position.x, speed + position.y, map);
+	walls[0] = is_wall_and_door_collision(speed + position.x, position.y, map);
+	walls[1] = is_wall_and_door_collision(position.x, position.y - speed, map);
+	walls[2] = is_wall_and_door_collision(position.x - speed, position.y, map);
+	walls[3] = is_wall_and_door_collision(position.x, speed + position.y, map);
 
 	if (1 != frightened_mode)
 	{
@@ -357,21 +356,29 @@ void Ghost::move(unsigned char level, std::array<std::array<Cell, MAP_WIDTH>, MA
 		}
 	}
 
-	if (is_pacman_collision(pacman.get_position()))
-	{
-		if (!frightened_mode) //When the ghost is not frightened and collides with Pacman, we kill Pacman.
-		{
-			pacman.set_dead(true);
-		}
-		else //Otherwise, the ghost starts running towards the house.
-		{
-			is_can_use_door = true;
+	if (frightened_mode) {
+		is_can_use_door = true;
 
-			frightened_mode = 2;
+		frightened_mode = 2;
 
-			target_position = start_position;
-		}
+		target_position = start_position;
 	}
+
+	//if (is_pacman_collision(pacman.get_position()))
+	//{
+	//	if (!frightened_mode) //When the ghost is not frightened and collides with Pacman, we kill Pacman.
+	//	{
+	//		pacman.set_dead(true);
+	//	}
+	//	else //Otherwise, the ghost starts running towards the house.
+	//	{
+	//		is_can_use_door = true;
+
+	//		frightened_mode = 2;
+
+	//		target_position = start_position;
+	//	}
+	//}
 }
 
 void Ghost::update_target(unsigned char pacman_direction, const Position& ghost_0_position, const Position& pacman_position)
@@ -530,6 +537,11 @@ void Ghost::update_target(unsigned char pacman_direction, const Position& ghost_
 			}
 		}
 	}
+}
+
+bool Ghost::is_frightened()
+{
+	return frightened_mode;
 }
 
 Position Ghost::get_position()
