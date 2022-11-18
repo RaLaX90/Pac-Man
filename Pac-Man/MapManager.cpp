@@ -312,6 +312,35 @@ std::array<Position, 4> MapManager::Get_ghost_start_positions()
 	return ghost_start_positions;
 }
 
+Position MapManager::Get_door_position()
+{
+	Position door_positions{};
+
+	for (unsigned char a = 0; a < MAP_HEIGHT; a++)
+	{
+		for (unsigned char b = 0; b < MAP_WIDTH; b++)
+		{
+			switch (map_sketch_level_1[a][b])
+			{
+				//Red ghost
+			case '=':
+			{
+				door_positions.x = CELL_SIZE * b;
+				door_positions.y = (CELL_SIZE * a) - CELL_SIZE; // Get exit position insead door position TODO
+
+				return door_positions;
+				break;
+			}
+			default: {
+				break;
+			}
+			}
+		}
+	}
+
+	return door_positions;
+}
+
 Position MapManager::Get_pacman_start_positions()
 {
 	Position pacman_start_position{};

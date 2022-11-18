@@ -11,7 +11,7 @@
 
 int main()
 {
-	Game_mode game_result = Game_mode::Continue;
+	State state = State::STATE_OK;
 
 	//Used to make the game framerate-independent.
 	unsigned lag = 0;
@@ -36,8 +36,9 @@ int main()
 
 	Pacman pacman{ mapManager.Get_pacman_start_positions() };
 
-	GhostManager ghostManager{ mapManager.Get_ghost_start_positions() };
+	GhostManager ghostManager{ mapManager.Get_ghost_start_positions(), mapManager.Get_door_position() };
 
+	unsigned int max_pelleets_count = mapManager.Get_pellets_count();
 	unsigned int score = 0;
 
 	//Get the current time and store it in a variable.
@@ -72,11 +73,11 @@ int main()
 
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
 				//Making sure the player can close the window.
-				game_result = Game_mode::Pacman_dead;
+				state = State::STATE_PACMAN_DEAD;
 				//window.close();
 			}
 
-			if (game_result == Game_mode::Continue)
+			if (state == State::STATE_OK)
 			{
 				pacman.move(level, mapManager.Get_map());
 
@@ -84,25 +85,26 @@ int main()
 
 				for (Ghost& ghost : ghostManager.get_ghosts()) {
 					if (!ghost.is_frightened() && is_collision(pacman.get_position(), ghost.get_position())) {
-						game_result = Game_mode::Pacman_dead;
+						state = State::STATE_PACMAN_DEAD;
 
 						break;
 					}
 				}
 
+				score = (max_pelleets_count - mapManager.Get_pellets_count()) * 10; //TODO (make it more optimized)
 				//We're checking every cell in the map.
 				if (mapManager.Get_pellets_count() == 0) { //TODO (make it more optimized)
-					game_result = Game_mode::All_pellets_collected;
+					state = State::STATE_ALL_PELLETS_COLLECTED;
 				}
 
-				//if (game_result == Game_mode::All_pellets_collected) // TODO (useless i think:))
+				//if (state == State::All_pellets_collected) // TODO (useless i think:))
 				//{
 				//	pacman.set_animation_timer(0);
 				//}
 			}
 			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) //Restarting the game.
 			{
-				if (game_result == Game_mode::Pacman_dead)
+				if (state == State::STATE_PACMAN_DEAD)
 				{
 					level = 0;
 				}
@@ -112,7 +114,7 @@ int main()
 					level++;
 				}
 
-				game_result = Game_mode::Continue;
+				state = State::STATE_OK;
 
 				mapManager.reset();
 
@@ -125,9 +127,9 @@ int main()
 			{
 				window.clear(sf::Color::Black);
 
-				pacman.draw(game_result, window);
+				pacman.draw(state, window);
 
-				if (game_result == Game_mode::Continue)
+				if (state == State::STATE_OK)
 				{
 					mapManager.Draw_map(mapManager.Get_map(), window);
 
@@ -140,13 +142,13 @@ int main()
 
 				if (pacman.get_animation_over())
 				{
-					if (game_result == Game_mode::All_pellets_collected)
+					if (state == State::STATE_ALL_PELLETS_COLLECTED)
 					{
-						mapManager.Draw_text(true, 0, 0, "Next level!", window);
+						mapManager.Draw_text(true, 0, 0, "Next level!\n\n\nPress enter", window);
 					}
-					else if (game_result == Game_mode::Pacman_dead)
+					else if (state == State::STATE_PACMAN_DEAD)
 					{
-						mapManager.Draw_text(true, 0, 0, "Game over", window);
+						mapManager.Draw_text(true, 0, 0, "Game over\n\n\nPress enter", window);
 					}
 				}
 

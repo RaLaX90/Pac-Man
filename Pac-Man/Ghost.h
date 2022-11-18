@@ -34,7 +34,7 @@ class Ghost : public Game_object
 	Position target_position;
 
 public:
-	Ghost(unsigned char i_id, const Position& i_start_position, const Position& exit_position);
+	Ghost(unsigned char i_id, const Position& i_start_position, const Position& door_position);
 	virtual ~Ghost();
 
 	//bool is_pacman_collision(const Position& pacman_position);

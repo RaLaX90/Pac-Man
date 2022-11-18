@@ -19,7 +19,7 @@ class GhostManager
 	std::array<Ghost, 4> ghosts;
 
 public:
-	GhostManager(const std::array<Position, 4>& ghost_positions);
+	GhostManager(const std::array<Position, 4>& ghost_start_positions, const Position& door_position);
 	~GhostManager();
 
 	void draw(bool flash, sf::RenderWindow& window);

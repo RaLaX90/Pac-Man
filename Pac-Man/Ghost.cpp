@@ -1,9 +1,9 @@
 #include "Ghost.h"
 
-Ghost::Ghost(unsigned char i_id, const Position& i_start_position, const Position& exit_position) :
+Ghost::Ghost(unsigned char i_id, const Position& i_start_position, const Position& door_position) :
 	id(i_id),
 	Game_object(i_start_position, GHOST_SPEED),
-	door_position(exit_position)
+	door_position(door_position)
 {
 	reset();
 }
@@ -31,7 +31,7 @@ float Ghost::get_target_distance(unsigned char direction)
 	short x = position.x;
 	short y = position.y;
 
-	//We'll imaginarily move the ghost in a given direction and calculate the distance to the target_position.
+	//We'll imaginarily move the ghost in a given direction and calculate the distance to the target position.
 	switch (direction)
 	{
 	case 0:
@@ -200,7 +200,7 @@ void Ghost::move(unsigned char level, std::array<std::array<Cell, MAP_WIDTH>, MA
 	}
 
 	//I used the modulo operator in case the ghost goes outside the grid.
-	if (2 == frightened_mode /*&& 0 == position.x % GHOST_ESCAPE_SPEED && 0 == position.y % GHOST_ESCAPE_SPEED*/)
+	if (2 == frightened_mode && 0 == (int)position.x % GHOST_ESCAPE_SPEED && 0 == (int)position.y % GHOST_ESCAPE_SPEED)
 	{
 		speed = GHOST_ESCAPE_SPEED;
 	}
@@ -208,11 +208,11 @@ void Ghost::move(unsigned char level, std::array<std::array<Cell, MAP_WIDTH>, MA
 	update_target(pacman.get_direction(), ghost_0.get_position(), pacman.get_position());
 
 	std::array<bool, 4> walls{};
-	walls[0] = is_wall_and_door_collision(speed + position.x, position.y, map);
-	walls[1] = is_wall_and_door_collision(position.x, position.y - speed, map);
-	walls[2] = is_wall_and_door_collision(position.x - speed, position.y, map);
-	walls[3] = is_wall_and_door_collision(position.x, speed + position.y, map);
-
+	walls[0] = is_wall_and_door_collision(speed + position.x, position.y, map, is_can_use_door);
+	walls[1] = is_wall_and_door_collision(position.x, position.y - speed, map, is_can_use_door);
+	walls[2] = is_wall_and_door_collision(position.x - speed, position.y, map, is_can_use_door);
+	walls[3] = is_wall_and_door_collision(position.x, speed + position.y, map, is_can_use_door);
+	
 	if (1 != frightened_mode)
 	{
 		//I used 4 because using a number between 0 and 3 will make the ghost move in a direction it can't move.
@@ -320,7 +320,7 @@ void Ghost::move(unsigned char level, std::array<std::array<Cell, MAP_WIDTH>, MA
 			//	position.x += (speed / static_cast<float>(5));
 			//}
 			//else {
-				position.x += speed;
+			position.x += speed;
 			//}
 			//(map_collision(position.x + speed, position.y, map) == Cell::Tunnel) ? position.x += (speed / static_cast<float>(5)) : position.x += speed;
 
@@ -334,6 +334,7 @@ void Ghost::move(unsigned char level, std::array<std::array<Cell, MAP_WIDTH>, MA
 		}
 		case Direction::Left:
 		{
+			position.x -= speed;
 			//(map_collision(position.x - speed, position.y, direction, map) == Cell::Tunnel) ? position.x -= (speed / static_cast<float>(2)) : position.x -= speed;
 
 			break;
@@ -356,29 +357,24 @@ void Ghost::move(unsigned char level, std::array<std::array<Cell, MAP_WIDTH>, MA
 		}
 	}
 
-	if (frightened_mode) {
-		is_can_use_door = true;
+	//if (frightened_mode) {
+	//	is_can_use_door = true;
 
-		frightened_mode = 2;
+	//	frightened_mode = 2;
 
-		target_position = start_position;
-	}
-
-	//if (is_pacman_collision(pacman.get_position()))
-	//{
-	//	if (!frightened_mode) //When the ghost is not frightened and collides with Pacman, we kill Pacman.
-	//	{
-	//		pacman.set_dead(true);
-	//	}
-	//	else //Otherwise, the ghost starts running towards the house.
-	//	{
-	//		is_can_use_door = true;
-
-	//		frightened_mode = 2;
-
-	//		target_position = start_position;
-	//	}
+	//	target_position = start_position;
 	//}
+
+	if (is_collision(this->position, pacman.get_position()))
+	{
+		if (frightened_mode == 2) {
+			is_can_use_door = true;
+
+			frightened_mode = 2;
+
+			target_position = start_position;
+		}
+	}
 }
 
 void Ghost::update_target(unsigned char pacman_direction, const Position& ghost_0_position, const Position& pacman_position)

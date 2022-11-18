@@ -33,7 +33,7 @@ unsigned short Pacman::get_energizer_timer()
 	return energizer_timer;
 }
 
-void Pacman::draw(Game_mode mode, sf::RenderWindow& window)
+void Pacman::draw(const State& mode, sf::RenderWindow& window)
 {
 	unsigned char frame = static_cast<unsigned char>(floor(animation_timer / static_cast<float>(PACMAN_ANIMATION_SPEED)));
 
@@ -41,7 +41,7 @@ void Pacman::draw(Game_mode mode, sf::RenderWindow& window)
 
 	sprite.setPosition(position.x, position.y);
 
-	if (mode == Game_mode::Pacman_dead || mode == Game_mode::All_pellets_collected)
+	if (mode == State::STATE_PACMAN_DEAD || mode == State::STATE_ALL_PELLETS_COLLECTED)
 	{
 		if (animation_timer < PACMAN_DEATH_FRAMES * PACMAN_ANIMATION_SPEED)
 		{
@@ -101,7 +101,7 @@ void Pacman::set_position(float new_position_x, float new_position_y)
 	position = { new_position_x, new_position_y };
 }
 
-void Pacman::move(unsigned char level, std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT>& map)
+void Pacman::move(unsigned char level, std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT>& map) //TODO (make 'map' parameter const)
 {
 	std::array<bool, 4> walls{ };
 

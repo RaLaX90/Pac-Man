@@ -1,6 +1,6 @@
 #include "MapCollision.h"
 
-bool is_wall_and_door_collision(float future_position_x, float future_position_y, std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT>& map)
+bool is_wall_and_door_collision(float future_position_x, float future_position_y, const std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT>& map, bool is_can_use_door)
 {
 	float cell_x = future_position_x / static_cast<float>(CELL_SIZE);
 	float cell_y = future_position_y / static_cast<float>(CELL_SIZE);
@@ -44,7 +44,7 @@ bool is_wall_and_door_collision(float future_position_x, float future_position_y
 		//Making sure that the position is inside the map.
 		if ((0 <= i_x && i_x < MAP_WIDTH) && (0 <= i_y && i_y < MAP_HEIGHT))
 		{
-			if (map[i_y][i_x] == Cell::Wall || map[i_y][i_x] == Cell::Door)
+			if (map[i_y][i_x] == Cell::Wall || (map[i_y][i_x] == Cell::Door && !is_can_use_door))
 			{
 				return true;
 			}
@@ -65,7 +65,7 @@ bool is_in_cell_center(float position_x, float position_y) {
 	return is_integer_cell_y && is_integer_cell_x;
 }
 
-bool is_collision(Position first_object_position, Position second_object_position)
+bool is_collision(const Position& first_object_position, const Position& second_object_position)
 {
 	if (first_object_position.x > second_object_position.x - CELL_SIZE && first_object_position.x < CELL_SIZE + second_object_position.x)
 	{

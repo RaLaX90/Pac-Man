@@ -32,7 +32,7 @@ public:
 
 	unsigned short get_energizer_timer();
 
-	void draw(Game_mode mode, sf::RenderWindow& window);
+	void draw(const State& mode, sf::RenderWindow& window);
 	void reset();
 	void set_animation_timer(unsigned short i_animation_timer);
 	void set_dead(bool is_dead);

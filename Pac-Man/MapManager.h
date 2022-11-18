@@ -24,7 +24,10 @@ public:
 	void reset();
 
 	unsigned int Get_pellets_count();
+
 	std::array<Position, 4> Get_ghost_start_positions();
+	Position Get_door_position();
+
 	Position Get_pacman_start_positions();
 
 	void Draw_map(const std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT>& map, sf::RenderWindow& window);

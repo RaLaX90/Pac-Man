@@ -1,12 +1,12 @@
 #include "GhostManager.h"
 
-GhostManager::GhostManager(const std::array<Position, 4>& ghost_positions) :
+GhostManager::GhostManager(const std::array<Position, 4>& ghost_start_positions, const Position& door_position) :
 	wave_timer(LONG_SCATTER_DURATION),
 	ghosts({
-		Ghost(0, {ghost_positions[0].x, ghost_positions[0].y}, {ghost_positions[0].x, ghost_positions[0].y}),
-		Ghost(1, {ghost_positions[1].x, ghost_positions[1].y}, {ghost_positions[0].x, ghost_positions[0].y}),
-		Ghost(2, {ghost_positions[2].x, ghost_positions[2].y}, {ghost_positions[0].x, ghost_positions[0].y}),
-		Ghost(3, {ghost_positions[3].x, ghost_positions[3].y}, {ghost_positions[0].x, ghost_positions[0].y}) })
+		Ghost(0, {ghost_start_positions[0].x, ghost_start_positions[0].y}, {door_position.x, door_position.y}),
+		Ghost(1, {ghost_start_positions[1].x, ghost_start_positions[1].y}, {door_position.x, door_position.y}),
+		Ghost(2, {ghost_start_positions[2].x, ghost_start_positions[2].y}, {door_position.x, door_position.y}),
+		Ghost(3, {ghost_start_positions[3].x, ghost_start_positions[3].y}, {door_position.x, door_position.y}) })
 {
 	reset(0);
 }

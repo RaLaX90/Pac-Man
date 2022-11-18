@@ -68,8 +68,8 @@ struct Position
 	}
 };
 
-enum Game_mode {
-	Continue = 0,
-	All_pellets_collected,
-	Pacman_dead
+enum State {
+	STATE_OK = 0,
+	STATE_ALL_PELLETS_COLLECTED,
+	STATE_PACMAN_DEAD
 };
