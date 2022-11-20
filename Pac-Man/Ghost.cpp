@@ -152,7 +152,7 @@ void Ghost::draw(bool flash, sf::RenderWindow& window)
 	animation_timer = (1 + animation_timer) % (GHOST_ANIMATION_FRAMES * GHOST_ANIMATION_SPEED);
 }
 
-void Ghost::reset()
+void Ghost::reset(const Position& i_start_position, const Position& door_position)
 {
 	fear_mode = false;
 	//Everyone can use the door except the red ghost.
@@ -164,6 +164,11 @@ void Ghost::reset()
 	animation_timer = 0;
 
 	target_position = door_position;
+
+	if (i_start_position.x != 0 && i_start_position.y != 0) {
+		set_start_position(i_start_position);
+		set_door_position(door_position);
+	}
 
 	set_position(start_position.x, start_position.y);
 }
@@ -208,10 +213,10 @@ void Ghost::move(unsigned char level, std::array<std::array<Cell, MAP_WIDTH>, MA
 	update_target(pacman.get_direction(), ghost_0.get_position(), pacman.get_position());
 
 	std::array<bool, 4> walls{};
-	walls[0] = is_wall_and_door_collision(speed + position.x, position.y, map, is_can_use_door);
-	walls[1] = is_wall_and_door_collision(position.x, position.y - speed, map, is_can_use_door);
-	walls[2] = is_wall_and_door_collision(position.x - speed, position.y, map, is_can_use_door);
-	walls[3] = is_wall_and_door_collision(position.x, speed + position.y, map, is_can_use_door);
+	walls[0] = is_wall_and_door_collision({ speed + position.x, position.y }, map, is_can_use_door);
+	walls[1] = is_wall_and_door_collision({ position.x, position.y - speed }, map, is_can_use_door);
+	walls[2] = is_wall_and_door_collision({ position.x - speed, position.y }, map, is_can_use_door);
+	walls[3] = is_wall_and_door_collision({ position.x, speed + position.y }, map, is_can_use_door);
 	
 	if (1 != frightened_mode)
 	{
@@ -312,62 +317,102 @@ void Ghost::move(unsigned char level, std::array<std::array<Cell, MAP_WIDTH>, MA
 
 	if (move)
 	{
+		float cell_y = position.y / CELL_SIZE;
+		if (cell_y < 0) {
+			cell_y = 0;
+		}
+		else if (cell_y > MAP_HEIGHT) {
+			cell_y = MAP_HEIGHT;
+		}
+
+		float cell_x = position.x / CELL_SIZE;
+		if (cell_x < 0) {
+			cell_x = 0;
+		}
+		else if (cell_x > MAP_WIDTH) {
+			cell_x = MAP_WIDTH;
+		}
+
 		switch (direction)
 		{
 		case Direction::Right:
 		{
-			//if (map_collision(position.x + speed, position.y, map) == Cell::Tunnel) {
-			//	position.x += (speed / static_cast<float>(5));
-			//}
-			//else {
-			position.x += speed;
-			//}
-			//(map_collision(position.x + speed, position.y, map) == Cell::Tunnel) ? position.x += (speed / static_cast<float>(5)) : position.x += speed;
+			if (0 <= cell_x && cell_x < MAP_WIDTH && 0 <= cell_y && cell_y < MAP_HEIGHT) {
+				if (map[cell_y][cell_x] == Cell::Tunnel) {
+					position.x += speed / 2;
+				}
+				else {
+					position.x += speed;
+				}
+			}
 
 			break;
 		}
 		case Direction::Up:
 		{
-			position.y -= speed;
+			if (0 <= cell_x && cell_x < MAP_WIDTH && 0 <= cell_y && cell_y < MAP_HEIGHT) {
+				if (map[cell_y][cell_x] == Cell::Tunnel) {
+					position.y -= speed / 2;
+				}
+				else {
+					position.y -= speed;
+				}
+			}
 
 			break;
 		}
 		case Direction::Left:
 		{
-			position.x -= speed;
-			//(map_collision(position.x - speed, position.y, direction, map) == Cell::Tunnel) ? position.x -= (speed / static_cast<float>(2)) : position.x -= speed;
+			if (0 <= cell_x && cell_x < MAP_WIDTH && 0 <= cell_y && cell_y < MAP_HEIGHT) {
+				if (map[cell_y][cell_x] == Cell::Tunnel) {
+					position.x -= speed / 2;
+				}
+				else {
+					position.x -= speed;
+				}
+			}
 
 			break;
 		}
 		case Direction::Down:
 		{
-			position.y += speed;
+			if (0 <= cell_x && cell_x < MAP_WIDTH && 0 <= cell_y && cell_y < MAP_HEIGHT) {
+				if (map[cell_y][cell_x] == Cell::Tunnel) {
+					position.y += speed / 2;
+				}
+				else {
+					position.y += speed;
+				}
+			}
+
+			break;
+		}
+		default: {
+			break;
 		}
 		}
 
-		//Warping.
-		//When the ghost leaves the map, we move it to the other side.
-		if (-CELL_SIZE >= position.x)
+		if (-CELL_SIZE >= position.x) // When ghost enters the tunnel on the right side...
 		{
-			position.x = CELL_SIZE * MAP_WIDTH - speed;
+			position.x = CELL_SIZE * MAP_WIDTH - speed; // he appears on the left side
 		}
-		else if (position.x >= CELL_SIZE * MAP_WIDTH)
+		else if (CELL_SIZE * MAP_WIDTH <= position.x) // When ghost enters the tunnel on the left side...
 		{
-			position.x = speed - CELL_SIZE;
+			position.x = speed - CELL_SIZE; // he appears on the right side
+		}
+		else if (-CELL_SIZE >= position.y) // When ghost enters the tunnel on the up side...
+		{
+			position.y = CELL_SIZE * MAP_HEIGHT - speed; // he appears on the down side
+		}
+		else if (CELL_SIZE * MAP_HEIGHT <= position.y) // When ghost enters the tunnel on the down side...
+		{
+			position.y = speed - CELL_SIZE; // he appears on the up side
 		}
 	}
 
-	//if (frightened_mode) {
-	//	is_can_use_door = true;
-
-	//	frightened_mode = 2;
-
-	//	target_position = start_position;
-	//}
-
 	if (is_collision(this->position, pacman.get_position()))
 	{
-		if (frightened_mode == 2) {
+		if (frightened_mode != 0) {
 			is_can_use_door = true;
 
 			frightened_mode = 2;
@@ -392,6 +437,8 @@ void Ghost::update_target(unsigned char pacman_direction, const Position& ghost_
 				frightened_mode = 0; //It stops being frightened.
 
 				target_position = door_position; //And starts leaving the house.
+
+				speed = GHOST_SPEED;
 			}
 		}
 	}
@@ -543,4 +590,15 @@ bool Ghost::is_frightened()
 Position Ghost::get_position()
 {
 	return position;
+}
+
+void Ghost::set_start_position(const Position& i_start_position)
+{
+	start_position.x = i_start_position.x;
+	start_position.y = i_start_position.y;
+}
+
+void Ghost::set_door_position(const Position& i_door_position)
+{
+	door_position = i_door_position;
 }

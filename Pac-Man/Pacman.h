@@ -22,7 +22,7 @@ class Pacman : public Game_object
 
 
 public:
-	Pacman(Position i_start_position);
+	Pacman(const Position& i_start_position);
 	virtual ~Pacman();
 
 	bool get_animation_over();
@@ -33,7 +33,7 @@ public:
 	unsigned short get_energizer_timer();
 
 	void draw(const State& mode, sf::RenderWindow& window);
-	void reset();
+	void reset(const Position& i_start_position = {});
 	void set_animation_timer(unsigned short i_animation_timer);
 	void set_dead(bool is_dead);
 	void set_position(float new_position_x, float new_position_y);

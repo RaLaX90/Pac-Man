@@ -7,7 +7,7 @@
 
 class MapManager
 {
-	std::array<std::string, MAP_HEIGHT> map_sketch_level_1;
+	std::array<std::string, MAP_HEIGHT> map_sketch;
 
 	std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT> map;
 
@@ -21,12 +21,15 @@ public:
 
 	std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT>& Get_map();
 
-	void reset();
+	void reset(unsigned char level = 0);
 
 	unsigned int Get_pellets_count();
 
 	std::array<Position, 4> Get_ghost_start_positions();
 	Position Get_door_position();
+
+	void Change_map(unsigned char level);
+	//Cell Get_cell(const Position& position);
 
 	Position Get_pacman_start_positions();
 

@@ -84,10 +84,12 @@ int main()
 				ghostManager.move_ghosts(level, mapManager.Get_map(), pacman);
 
 				for (Ghost& ghost : ghostManager.get_ghosts()) {
-					if (!ghost.is_frightened() && is_collision(pacman.get_position(), ghost.get_position())) {
-						state = State::STATE_PACMAN_DEAD;
+					if (is_collision(pacman.get_position(), ghost.get_position()) && !ghost.is_frightened()) {
+						//if (is_in_cell_center(pacman.get_position()) && is_in_cell_center(ghost.get_position())) { //Correct game mechanics, but too easy to play
+							state = State::STATE_PACMAN_DEAD;
 
-						break;
+							break;
+						//}
 					}
 				}
 
@@ -116,11 +118,11 @@ int main()
 
 				state = State::STATE_OK;
 
-				mapManager.reset();
+				mapManager.reset(level);
 
-				ghostManager.reset(level);
+				ghostManager.reset(level, mapManager.Get_ghost_start_positions(), mapManager.Get_door_position());
 
-				pacman.reset();
+				pacman.reset(mapManager.Get_pacman_start_positions());
 			}
 
 			if (FRAME_DURATION > lag)

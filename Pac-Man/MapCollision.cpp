@@ -1,9 +1,9 @@
 #include "MapCollision.h"
 
-bool is_wall_and_door_collision(float future_position_x, float future_position_y, const std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT>& map, bool is_can_use_door)
+bool is_wall_and_door_collision(const Position& future_position, const std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT>& map, bool is_can_use_door)
 {
-	float cell_x = future_position_x / static_cast<float>(CELL_SIZE);
-	float cell_y = future_position_y / static_cast<float>(CELL_SIZE);
+	float cell_x = future_position.x / static_cast<float>(CELL_SIZE);
+	float cell_y = future_position.y / static_cast<float>(CELL_SIZE);
 
 	//A ghost/Pacman can intersect 4 cells at most.
 	for (unsigned char a = 0; a < 4; a++)
@@ -54,12 +54,12 @@ bool is_wall_and_door_collision(float future_position_x, float future_position_y
 	return false;
 }
 
-bool is_in_cell_center(float position_x, float position_y) {
+bool is_in_cell_center(const Position& position) {
 
-	float cell_x = position_x / CELL_SIZE;
+	float cell_x = position.x / CELL_SIZE;
 	bool is_integer_cell_x = cell_x == (int)abs(cell_x);
 
-	float cell_y = position_y / CELL_SIZE;
+	float cell_y = position.y / CELL_SIZE;
 	bool is_integer_cell_y = cell_y == (int)abs(cell_y);
 
 	return is_integer_cell_y && is_integer_cell_x;

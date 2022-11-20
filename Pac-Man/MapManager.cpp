@@ -1,4 +1,5 @@
 #include "MapManager.h"
+#include "Maps.h"
 
 void MapManager::convert_sketch() {
 
@@ -6,7 +7,7 @@ void MapManager::convert_sketch() {
 	{
 		for (unsigned char b = 0; b < MAP_WIDTH; b++)
 		{
-			switch (map_sketch_level_1[a][b])
+			switch (map_sketch[a][b])
 			{
 			case '#':
 			{
@@ -48,32 +49,9 @@ void MapManager::convert_sketch() {
 	}
 }
 
-MapManager::MapManager() {
-	map_sketch_level_1 = {
-		"#####################",
-		"#.........#.........#",
-		"#o###.###.#.###.###o#",
-		"#...................#",
-		"#.###.#.#####.#.###.#",
-		"#.....#...#...#.....#",
-		"#####.### # ###.#####",
-		"    #.#   0   #.#    ",
-		"#####.# ##=## #.#####",
-		"TTTTT.  #123#  .TTTTT",
-		"#####.# ##### #.#####",
-		"    #.#       #.#    ",
-		"#####.# ##### #.#####",
-		"#.........#.........#",
-		"#.###.###.#.###.###.#",
-		"#o.##.....P.....##.o#",
-		"##.##.#.#####.#.##.##",
-		"#.....#...#...#.....#",
-		"#.#######.#.#######.#",
-		"#...................#",
-		"#####################"
-	};
-
-	convert_sketch();
+MapManager::MapManager()
+{
+	reset();
 
 	texture.loadFromFile("Images/Map" + std::to_string(CELL_SIZE) + ".png");
 }
@@ -87,8 +65,10 @@ std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT>& MapManager::Get_map()
 	return map;
 }
 
-void MapManager::reset()
+void MapManager::reset(unsigned char level)
 {
+	Change_map(level);
+
 	convert_sketch();
 }
 
@@ -139,24 +119,28 @@ void MapManager::Draw_map(const std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIG
 
 				if ((b > 0 && map[a][b - 1] == Cell::Wall) ||  //If previous cell is wall, than note it 
 					(b == 0 && ((a > 0 && map[a - 1][b] == Cell::Tunnel) ||  //Or if in left side of map and cell below is tunnel, than draw an unfinished wall 
-								(a < MAP_HEIGHT - 1 && map[a + 1][b] == Cell::Tunnel)))) //(since the cell above and below is a tunnel that leads to the other side of the map)
+						(a < MAP_HEIGHT - 1 && map[a + 1][b] == Cell::Tunnel)))) //(since the cell above and below is a tunnel that leads to the other side of the map)
 				{
 					left = 1;
 				}
 
 				if (((b < MAP_WIDTH - 1) && map[a][b + 1] == Cell::Wall) || //If next cell is wall, than note it 
 					(b == MAP_WIDTH - 1 && ((a > 0 && map[a - 1][b] == Cell::Tunnel) || // The same history with tunnel wals in right side
-										(a < MAP_HEIGHT - 1 && map[a + 1][b] == Cell::Tunnel))))
+						(a < MAP_HEIGHT - 1 && map[a + 1][b] == Cell::Tunnel))))
 				{
 					right = 1;
 				}
 
-				if (a > 0 && map[a - 1][b] == Cell::Wall) //If cell above is wall, than note it 
+				if (a > 0 && map[a - 1][b] == Cell::Wall || //If next cell is wall, than note it 
+					(a == 0 && ((b > 0 && map[a][b - 1] == Cell::Tunnel) || // The same history with tunnel wals in right side
+						(b < MAP_WIDTH - 1 && map[a][b + 1] == Cell::Tunnel)))) //If cell above is wall, than note it 
 				{
 					up = 1;
 				}
 
-				if ((a < MAP_HEIGHT - 1) && map[a + 1][b] == Cell::Wall) //If cell below is wall, than note it
+				if ((a < MAP_HEIGHT - 1) && map[a + 1][b] == Cell::Wall || //If next cell is wall, than note it 
+					(a == MAP_HEIGHT - 1 && ((b > 0 && map[a][b - 1] == Cell::Tunnel) || // The same history with tunnel wals in right side
+						(b < MAP_WIDTH - 1 && map[a][b + 1] == Cell::Tunnel)))) //If cell below is wall, than note it
 				{
 					down = 1;
 				}
@@ -268,7 +252,7 @@ std::array<Position, 4> MapManager::Get_ghost_start_positions()
 	{
 		for (unsigned char b = 0; b < MAP_WIDTH; b++)
 		{
-			switch (map_sketch_level_1[a][b])
+			switch (map_sketch[a][b])
 			{
 				//Red ghost
 			case '0':
@@ -320,7 +304,7 @@ Position MapManager::Get_door_position()
 	{
 		for (unsigned char b = 0; b < MAP_WIDTH; b++)
 		{
-			switch (map_sketch_level_1[a][b])
+			switch (map_sketch[a][b])
 			{
 				//Red ghost
 			case '=':
@@ -341,6 +325,26 @@ Position MapManager::Get_door_position()
 	return door_positions;
 }
 
+//Cell MapManager::Get_cell(const Position& position) {
+//	float cell_x = position.x / CELL_SIZE;
+//	float cell_y = position.y / CELL_SIZE;
+//
+//	if ((0 >= cell_x && cell_x < MAP_WIDTH) && (0 >= cell_y && cell_y < MAP_HEIGHT)) {
+//		return map[cell_y][cell_x];
+//	}
+//
+//	return Cell::Empty;
+//}
+
+void MapManager::Change_map(unsigned char level) {
+	if (level <= 4) { //TODO (make max maps count dynamic)
+		map_sketch = maps[level];
+	}
+	else {
+		map_sketch = maps[4];
+	}
+}
+
 Position MapManager::Get_pacman_start_positions()
 {
 	Position pacman_start_position{};
@@ -349,7 +353,7 @@ Position MapManager::Get_pacman_start_positions()
 	{
 		for (unsigned char b = 0; b < MAP_WIDTH; b++)
 		{
-			switch (map_sketch_level_1[a][b])
+			switch (map_sketch[a][b])
 			{
 			case 'P':
 			{

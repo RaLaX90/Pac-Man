@@ -23,7 +23,7 @@ public:
 	~GhostManager();
 
 	void draw(bool flash, sf::RenderWindow& window);
-	void reset(unsigned char level);
+	void reset(unsigned char level = 0, const std::array<Position, 4>& ghost_start_positions = {}, const Position& door_position = {});
 	void move_ghosts(unsigned char level, std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT>& map, Pacman& pacman);
 
 	std::array<Ghost, 4>& get_ghosts();

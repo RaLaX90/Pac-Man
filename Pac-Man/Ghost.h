@@ -42,7 +42,7 @@ public:
 	float get_target_distance(unsigned char direction);
 
 	void draw(bool flash, sf::RenderWindow& window);
-	void reset();
+	void reset(const Position& i_start_position = {}, const Position& door_position = {});
 	void set_position(float x, float y);
 	void switch_mode();
 	void move(unsigned char level, std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT>& map, Ghost& ghost_0, Pacman& pacman);
@@ -50,4 +50,6 @@ public:
 
 	bool is_frightened();
 	Position get_position();
+	void set_start_position(const Position& i_start_position);
+	void set_door_position(const Position& i_door_position);
 };
