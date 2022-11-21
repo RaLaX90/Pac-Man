@@ -306,14 +306,12 @@ Position MapManager::Get_door_position()
 		{
 			switch (map_sketch[a][b])
 			{
-				//Red ghost
 			case '=':
 			{
 				door_positions.x = CELL_SIZE * b;
 				door_positions.y = (CELL_SIZE * a) - CELL_SIZE; // Get exit position insead door position TODO
 
 				return door_positions;
-				break;
 			}
 			default: {
 				break;
@@ -325,19 +323,8 @@ Position MapManager::Get_door_position()
 	return door_positions;
 }
 
-//Cell MapManager::Get_cell(const Position& position) {
-//	float cell_x = position.x / CELL_SIZE;
-//	float cell_y = position.y / CELL_SIZE;
-//
-//	if ((0 >= cell_x && cell_x < MAP_WIDTH) && (0 >= cell_y && cell_y < MAP_HEIGHT)) {
-//		return map[cell_y][cell_x];
-//	}
-//
-//	return Cell::Empty;
-//}
-
 void MapManager::Change_map(unsigned char level) {
-	if (level <= 4) { //TODO (make max maps count dynamic)
+	if (level < 4) { //TODO (make max maps count dynamic)
 		map_sketch = maps[level];
 	}
 	else {

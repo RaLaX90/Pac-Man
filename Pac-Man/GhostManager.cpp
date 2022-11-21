@@ -34,7 +34,6 @@ void GhostManager::reset(unsigned char level, const std::array<Position, 4>& gho
 	{
 		ghosts[a].reset(ghost_start_positions[a], door_position);
 	}
-
 }
 
 void GhostManager::move_ghosts(unsigned char level, std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT>& map, Pacman& pacman)
@@ -53,7 +52,6 @@ void GhostManager::move_ghosts(unsigned char level, std::array<std::array<Cell, 
 				}
 			}
 
-			//I took the rules from the website.
 			if (current_wave % 2)
 			{
 				wave_timer = CHASE_DURATION;

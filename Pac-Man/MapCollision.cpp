@@ -62,7 +62,7 @@ bool is_in_cell_center(const Position& position) {
 	float cell_y = position.y / CELL_SIZE;
 	bool is_integer_cell_y = cell_y == (int)abs(cell_y);
 
-	return is_integer_cell_y && is_integer_cell_x;
+	return is_integer_cell_x && is_integer_cell_y;
 }
 
 bool is_collision(const Position& first_object_position, const Position& second_object_position)

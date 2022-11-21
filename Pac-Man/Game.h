@@ -1,6 +1,10 @@
 #pragma once
 
-//#include "Pacman.h"
+// That's in development
+
+
+
+//#include "Pacman.h" 
 //#include "Ghost.h"
 //#include "GhostManager.h"
 //
@@ -14,4 +18,3 @@
 //
 //	GhostManager ghost_manager{ ghost_home_positions };
 //};
-

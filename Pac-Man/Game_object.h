@@ -4,7 +4,7 @@
 
 class Game_object
 {
-protected:
+protected: //Use protected mode so this properties of the child classes was in private access
 	Direction direction;
 
 	Position start_position;

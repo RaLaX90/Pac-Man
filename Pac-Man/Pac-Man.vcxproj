@@ -132,9 +132,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ConvertSketch.cpp" />
-    <ClCompile Include="DrawMap.cpp" />
-    <ClCompile Include="DrawText.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Game_object.cpp" />
     <ClCompile Include="Ghost.cpp" />
@@ -145,9 +142,6 @@
     <ClCompile Include="Pacman.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ConvertSketch.h" />
-    <ClInclude Include="DrawMap.h" />
-    <ClInclude Include="DrawText.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Game_object.h" />
     <ClInclude Include="Ghost.h" />

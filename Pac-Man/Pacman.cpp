@@ -18,11 +18,6 @@ bool Pacman::get_animation_over()
 	return animation_over;
 }
 
-bool Pacman::is_dead()
-{
-	return dead;
-}
-
 Direction Pacman::get_direction()
 {
 	return direction;
@@ -72,14 +67,13 @@ void Pacman::draw(const State& mode, sf::RenderWindow& window)
 void Pacman::reset(const Position& i_start_position)
 {
 	animation_over = false;
-	dead = false;
 
 	direction = Direction::Right;
 
 	animation_timer = 0;
 	energizer_timer = 0;
 
-	if (i_start_position.x != 0 && i_start_position.y != 0) {
+	if (i_start_position.x != 0 && i_start_position.y != 0) { // If has a new start position then...
 		set_start_position(i_start_position);
 	}
 
@@ -89,15 +83,6 @@ void Pacman::reset(const Position& i_start_position)
 void Pacman::set_animation_timer(unsigned short i_animation_timer)
 {
 	animation_timer = i_animation_timer;
-}
-
-void Pacman::set_dead(bool is_dead)
-{
-	if (dead = is_dead)
-	{
-		//Making sure that the animation starts from the beginning.
-		animation_timer = 0;
-	}
 }
 
 void Pacman::set_position(float new_position_x, float new_position_y)
@@ -115,7 +100,7 @@ void Pacman::move(unsigned char level, std::array<std::array<Cell, MAP_WIDTH>, M
 	walls[3] = is_wall_and_door_collision({ position.x, speed + position.y }, map);	//												in down direction
 
 	/*if(is_in_cell_center(position.x, position.y)){*/ // No needed (leave it here just in case)
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && direction != Direction::Right && !walls[Direction::Right])
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && direction != Direction::Right && !walls[Direction::Right]) // If key pressed and direction is not the same and there are not a wall or door then...
 	{
 		direction = Direction::Right;
 	}
@@ -127,7 +112,7 @@ void Pacman::move(unsigned char level, std::array<std::array<Cell, MAP_WIDTH>, M
 	{
 		direction = Direction::Left;
 	}
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && direction != Direction::Down && !walls[Direction::Down])
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && direction != Direction::Down && !walls[Direction::Down]) 
 	{
 		direction = Direction::Down;
 	}
@@ -184,8 +169,8 @@ void Pacman::move(unsigned char level, std::array<std::array<Cell, MAP_WIDTH>, M
 		position.y = speed - CELL_SIZE; // he appears on the up side
 	}
 
-	float cell_y = position.y / CELL_SIZE;
-	float cell_x = position.x / CELL_SIZE;
+	short cell_y = position.y / CELL_SIZE;
+	short cell_x = position.x / CELL_SIZE;
 
 	if (is_in_cell_center({ position.x, position.y })) {
 		if (0 <= cell_x && cell_x < MAP_WIDTH && 0 <= cell_y && cell_y < MAP_HEIGHT) {
@@ -193,32 +178,23 @@ void Pacman::move(unsigned char level, std::array<std::array<Cell, MAP_WIDTH>, M
 			{
 			case Cell::Pellet: {
 				map[cell_y][cell_x] = Cell::Empty;
-				energizer_timer = std::max(0, energizer_timer - 1);
+				energizer_timer = std::max(0, energizer_timer - 1); // If pacman pick up not a energizer - decrease energizer time
 
 				break;
 			}
 			case Cell::Energizer: {
 				map[cell_y][cell_x] = Cell::Empty;
-				energizer_timer = static_cast<unsigned short>(ENERGIZER_DURATION / pow(2, level));
+				energizer_timer = static_cast<unsigned short>(ENERGIZER_DURATION / pow(2, level)); // If pick up a energizer - increase energizer time
 
 				break;
 			}
 			default:
-				energizer_timer = std::max(0, energizer_timer - 1);
+				energizer_timer = std::max(0, energizer_timer - 1);  // If pacman pick up not a energizer - decrease energizer time
 
 				break;
 			}
 		}
 	}
-	//if (map_collision(position.new_position_x, position.new_position_y, map) == Cell::Energizer/*is_wall_and_door_collision(true, false, position.new_position_x, position.new_position_y, map)*/) //When Pacman eats an energizer...
-	//{
-	//	//He becomes energized!
-	//	energizer_timer = static_cast<unsigned short>(ENERGIZER_DURATION / pow(2, level));
-	//}
-	//else
-	//{
-	//energizer_timer = std::max(0, energizer_timer - 1);
-	//}
 }
 
 void Pacman::set_start_position(const Position& i_start_position)

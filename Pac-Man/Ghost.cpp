@@ -12,24 +12,10 @@ Ghost::~Ghost()
 {
 }
 
-//bool Ghost::is_pacman_collision(const Position& pacman_position)
-//{
-//	//I used the ADVANCED collision checking algorithm.
-//	if (position.x > pacman_position.x - CELL_SIZE && position.x < CELL_SIZE + pacman_position.x)
-//	{
-//		if (position.y > pacman_position.y - CELL_SIZE && position.y < CELL_SIZE + pacman_position.y)
-//		{
-//			return true;
-//		}
-//	}
-//
-//	return false;
-//}
-
 float Ghost::get_target_distance(unsigned char direction)
 {
-	short x = position.x;
-	short y = position.y;
+	float x = position.x;
+	float y = position.y;
 
 	//We'll imaginarily move the ghost in a given direction and calculate the distance to the target position.
 	switch (direction)
@@ -317,7 +303,7 @@ void Ghost::move(unsigned char level, std::array<std::array<Cell, MAP_WIDTH>, MA
 
 	if (move)
 	{
-		float cell_y = position.y / CELL_SIZE;
+		short cell_y = position.y / CELL_SIZE;
 		if (cell_y < 0) {
 			cell_y = 0;
 		}
@@ -325,7 +311,7 @@ void Ghost::move(unsigned char level, std::array<std::array<Cell, MAP_WIDTH>, MA
 			cell_y = MAP_HEIGHT;
 		}
 
-		float cell_x = position.x / CELL_SIZE;
+		short cell_x = position.x / CELL_SIZE;
 		if (cell_x < 0) {
 			cell_x = 0;
 		}
@@ -410,7 +396,7 @@ void Ghost::move(unsigned char level, std::array<std::array<Cell, MAP_WIDTH>, MA
 		}
 	}
 
-	if (is_collision(this->position, pacman.get_position()))
+	if (is_collision(this->position, pacman.get_position())) //If pacman and ghost is touch then...
 	{
 		if (frightened_mode != 0) {
 			is_can_use_door = true;

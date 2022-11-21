@@ -12,21 +12,17 @@ class Pacman : public Game_object
 {
 	//This is used for the death animation.
 	bool animation_over;
-	
-	bool dead;
 
 	sf::Texture texture_dead;
 	sf::Texture texture_alive;
 
 	unsigned short energizer_timer;
 
-
 public:
 	Pacman(const Position& i_start_position);
 	virtual ~Pacman();
 
 	bool get_animation_over();
-	bool is_dead();
 
 	Direction get_direction();
 
@@ -35,7 +31,6 @@ public:
 	void draw(const State& mode, sf::RenderWindow& window);
 	void reset(const Position& i_start_position = {});
 	void set_animation_timer(unsigned short i_animation_timer);
-	void set_dead(bool is_dead);
 	void set_position(float new_position_x, float new_position_y);
 	void move(unsigned char level, std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT>& map);
 

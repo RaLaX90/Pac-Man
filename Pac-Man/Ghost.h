@@ -37,8 +37,6 @@ public:
 	Ghost(unsigned char i_id, const Position& i_start_position, const Position& door_position);
 	virtual ~Ghost();
 
-	//bool is_pacman_collision(const Position& pacman_position);
-
 	float get_target_distance(unsigned char direction);
 
 	void draw(bool flash, sf::RenderWindow& window);

@@ -18,9 +18,6 @@ int main()
 
 	unsigned char level = 0;
 
-	//Similar to lag, used to make the game framerate-independent.
-	std::chrono::time_point<std::chrono::steady_clock> previous_time;
-
 	sf::Event event;
 
 	sf::RenderWindow window(sf::VideoMode(CELL_SIZE * MAP_WIDTH * SCREEN_RESIZE, (FONT_HEIGHT + CELL_SIZE * MAP_HEIGHT) * SCREEN_RESIZE), "Pac-Man", sf::Style::Close);
@@ -32,8 +29,6 @@ int main()
 
 	MapManager mapManager{};
 
-	//std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT> map = mapManager.Get_map();
-
 	Pacman pacman{ mapManager.Get_pacman_start_positions() };
 
 	GhostManager ghostManager{ mapManager.Get_ghost_start_positions(), mapManager.Get_door_position() };
@@ -41,13 +36,15 @@ int main()
 	unsigned int max_pelleets_count = mapManager.Get_pellets_count();
 	unsigned int score = 0;
 
+	unsigned delta_time;
+	//Similar to lag, used to make the game framerate-independent.
 	//Get the current time and store it in a variable.
-	previous_time = std::chrono::steady_clock::now();
+	std::chrono::time_point<std::chrono::steady_clock> previous_time = std::chrono::steady_clock::now();
 
 	while (window.isOpen())
 	{
 		//Here we're calculating the lag.
-		unsigned delta_time = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - previous_time).count();
+		delta_time = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - previous_time).count();
 
 		lag += delta_time;
 
@@ -73,8 +70,7 @@ int main()
 
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
 				//Making sure the player can close the window.
-				state = State::STATE_PACMAN_DEAD;
-				//window.close();
+				window.close();
 			}
 
 			if (state == State::STATE_OK)
@@ -94,7 +90,7 @@ int main()
 				}
 
 				score = (max_pelleets_count - mapManager.Get_pellets_count()) * 10; //TODO (make it more optimized)
-				//We're checking every cell in the map.
+
 				if (mapManager.Get_pellets_count() == 0) { //TODO (make it more optimized)
 					state = State::STATE_ALL_PELLETS_COLLECTED;
 				}
@@ -112,7 +108,7 @@ int main()
 				}
 				else
 				{
-					//After each win we reduce the duration of attack waves and energizers.
+					//After each win we reduce the duration of attack waves, energizers and maps.
 					level++;
 				}
 
@@ -120,7 +116,8 @@ int main()
 
 				mapManager.reset(level);
 
-				ghostManager.reset(level, mapManager.Get_ghost_start_positions(), mapManager.Get_door_position());
+				ghostManager.reset(level, mapManager.Get_ghost_start_positions(), mapManager.Get_door_position());	//TODO (can be optimized: 
+																													//do not update start position, if map is the same)
 
 				pacman.reset(mapManager.Get_pacman_start_positions());
 			}

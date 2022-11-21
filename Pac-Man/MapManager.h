@@ -11,7 +11,7 @@ class MapManager
 
 	std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT> map;
 
-	sf::Texture texture;
+	sf::Texture texture; //not to calculate it every time
 
 	void convert_sketch();
 	
@@ -29,7 +29,6 @@ public:
 	Position Get_door_position();
 
 	void Change_map(unsigned char level);
-	//Cell Get_cell(const Position& position);
 
 	Position Get_pacman_start_positions();
 
