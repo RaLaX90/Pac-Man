@@ -62,9 +62,9 @@ struct Position
 	float x;
 	float y;
 
-	bool operator==(const Position& another_ghost_position)
+	bool operator==(const Position& another_position)
 	{
-		return this->x == another_ghost_position.x && this->y == another_ghost_position.y;
+		return this->x == another_position.x && this->y == another_position.y;
 	}
 };
 

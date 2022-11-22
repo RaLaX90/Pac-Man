@@ -31,7 +31,7 @@ public:
 	void draw(const State& mode, sf::RenderWindow& window);
 	void reset(const Position& i_start_position = {});
 	void set_animation_timer(unsigned short i_animation_timer);
-	void set_position(float new_position_x, float new_position_y);
+	void set_position(const Position& new_position);
 	void move(unsigned char level, std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT>& map);
 
 	void set_start_position(const Position& i_start_position);

@@ -77,7 +77,7 @@ void Pacman::reset(const Position& i_start_position)
 		set_start_position(i_start_position);
 	}
 
-	set_position(start_position.x, start_position.y);
+	set_position({ start_position.x, start_position.y }); // TODO (make sure that this is don't calculates 2 times during inizialization)
 }
 
 void Pacman::set_animation_timer(unsigned short i_animation_timer)
@@ -85,9 +85,9 @@ void Pacman::set_animation_timer(unsigned short i_animation_timer)
 	animation_timer = i_animation_timer;
 }
 
-void Pacman::set_position(float new_position_x, float new_position_y)
+void Pacman::set_position(const Position& new_position)
 {
-	position = { new_position_x, new_position_y };
+	position = { new_position.x, new_position.y };
 }
 
 void Pacman::move(unsigned char level, std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT>& map) //TODO (make 'map' parameter const)
